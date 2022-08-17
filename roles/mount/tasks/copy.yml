@@ -1,8 +1,8 @@
-- name: copy from iso mount to web foreman_server_ur
-  ansible.posix.synchronize:
+- name: "copy from iso mount to web {{ foreman_server_url }}"
+  ansible.copy:
+    remote_src: true
     src:  "{{ item['copy_path'] }}"
     dest: "{{ item['web_path'] }}"
-    recurse: true
-    owner: apache
+    ower: apache
     group: apache
   loop: "{{ item['kickstart_publish_paths'] }}"

@@ -6,7 +6,7 @@
 
 - name: "loop through {{ item['kickstart_publish_paths'] }}"
   file:
-    path: "{{ item['web_server_path'] }}"
+    path: "{{ item['web_path'] }}"
     recurse: true
     state: directory
   loop: "{{ item['kickstart_publish_paths'] }}"
