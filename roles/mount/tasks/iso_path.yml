@@ -4,17 +4,37 @@
     recurse: true
     state: directory
 
-- name: "verify that {{ item['iso_path'] }}"
+- name: "loop through {{ item['kickstart_publish_paths'] }}"
+  file:
+    path: "{{ item['web_server_path'] }}"
+    recurse: true
+    state: directory
+  loop: "{{ item['kickstart_publish_paths'] }}"
+
+- name: "verify  {{ item['iso_path'] }}"
   block:
   - stat: 
       path: "{{ item['iso_path'] }}"
     register: iso_type
+    ignore_errors: true
+
+  - set_fact:
+      test: "application/x-iso9660-image"
+      type: "{{ iso_test['stat']['mimetype'] | default(omit) }}"
 
   - assert:
       that:
-      - "{{ iso_test['stat']['mimetype'] }} == 'application/x-iso9660-image'"
-      msg: 
-      - validate that "{{ item['iso_path'] }} exists and that it is an iso."
+      - type == test
+      msg:
+      - "!!! READ ME !!!"
+      - "validate that {{ item['iso_path'] }} exists and that it is an iso."
+    when: type is defined
+
+  - fail:
+      msg:
+      - "!!! READ ME !!!"
+      - "validate that {{ item['iso_path'] }} exists and that it is an iso."
+    when: type is not defined
 
 - name: "mounting {{ item['iso_path'] }} to {{ item['iso_mount_path'] }}"
   mount:
