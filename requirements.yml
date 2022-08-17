@@ -5,3 +5,4 @@ collections:
   source: https://galaxy.ansible.com
 - name: git@github.com:TheRedGreek/remote_kickstart_installer.git
   source: git
+- name: ansible.posix
