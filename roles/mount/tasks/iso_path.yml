@@ -4,7 +4,7 @@
     recurse: true
     state: directory
 
-- name: "verify that {{ iso_path }} is an iso_mount_path"
+- name: "verify that {{ item['iso_path'] }} is an {{ item['iso_mount_path'] }}"
   stat: 
     path: "{{ item['iso_path'] }}"
   register: iso_type
