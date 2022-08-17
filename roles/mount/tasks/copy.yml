@@ -6,3 +6,25 @@
     owner: apache
     group: apache
   loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
+
+- name: generate treeinfo
+  template:
+    src:  "{{ jinja_temp }}"
+    dest: "{{ item['web_path'] }}"
+    owner: apache
+    group: apache
+  when: "{{ item['appstream_repo'] | bool }}"
+  loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
+  vars:
+    jinja_temp: AppStream.j2
+
+- name: generate treeinfo
+  template:
+    src:  "{{ jinja_temp }}"
+    dest: "{{ item['web_path'] }}"
+    owner: apache
+    group: apache
+  when: "{{ item['baseos_repo'] | bool }}"
+  loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
+  vars:
+    jinja_temp: BaseOS.j2
