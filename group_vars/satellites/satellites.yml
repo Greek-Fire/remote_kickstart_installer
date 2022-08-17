@@ -12,8 +12,8 @@ foreman_kickstart:
   os_minor: 6
 - name: "RHEL8 Kickstart"
   kickstart_paths:
-    appstream: "{{ iso_mount_path }}/{{ os_type }}/{{ os_major }}/{{ os_minor }}/AppStream/"
-    baseos:    "{{ iso_mount_path }}/{{ os_type }}/{{ os_major }}/{{ os_minor }}/BaseOs/"
+    - appstream: "{{ iso_mount_path }}/{{ os_type }}/{{ os_major }}/{{ os_minor }}/AppStream/"
+      baseos:    "{{ iso_mount_path }}/{{ os_type }}/{{ os_major }}/{{ os_minor }}/BaseOs/"
 - iso_mount_path: /mnt/isos/RHEL7/
   iso_path: /mnt/cloud_isos/
   os_type: "RHEL"
