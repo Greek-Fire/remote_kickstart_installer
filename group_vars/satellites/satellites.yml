@@ -12,17 +12,17 @@ foreman_kickstart:
   os_minor: 6
   kickstart_publish_paths:
   - web_path: "/var/www/html/pub/kickstart/RHEL/8/8.6/x86_64/AppStream/kickstart"
-    copy_path: "{{ iso_path }}/AppStream"
+    copy_path: "{{ item['iso_path'] }}/AppStream"
   - web_path: "/var/www/html/pub/kickstart/RHEL/8/8.6/x86_64/BaseOS/kickstart" 
-    copy_path: "{{ iso_path }}/BaseOS"
+    copy_path: "{{ item['iso_path'] }}/BaseOS"
 - iso_mount_path: /mnt/isos/RHEL7/
   iso_path: /mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso/
   os_type: "RHEL"
   os_major: 7
   os_minor: 9
   kickstart_publish_paths: 
-   - web_server_path: "/var/www/html/pub/kickstart/RHEL/7/7.9/kickstart/"
-     copy_path: "{{ iso_path }}
+   - web_path: "/var/www/html/pub/kickstart/RHEL/7/7.9/kickstart/"
+     copy_path: "{{ iso_path }}"
 
 foreman_operatingsystems:
 - name:  "RedHat"
