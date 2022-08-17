@@ -4,10 +4,16 @@
     recurse: true
     state: directory
 
-- name: "verify that {{ item['iso_path'] }} is an {{ item['iso_mount_path'] }}"
+- name: "verify that {{ item['iso_path'] }} is in {{ item['iso_mount_path'] }}"
   stat: 
     path: "{{ item['iso_path'] }}"
   register: iso_type
+
+- assert:
+    that:
+    - "{{ item['iso_path']['stat']['mimetype'] }} == 'application/x-iso9660-image'"
+    msg: 
+    - validate that "{{ item['iso_path'] }} exists and that it is an iso."
 
 - name: "mounting {{ item['iso_path'] }} to {{ item['iso_mount_path'] }}"
   mount:

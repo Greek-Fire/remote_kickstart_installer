@@ -6,7 +6,7 @@ foreman_architecture:
 
 foreman_kickstart:
 - iso_mount_path: /mnt/isos/RHEL8/
-  iso_path: /mnt/cloud_isos/
+  iso_path: /mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso
   os_type: "RHEL"
   os_major: 8
   os_minor: 6
@@ -14,7 +14,7 @@ foreman_kickstart:
     - "/var/www/html/pub/kickstart/RHEL/8/8.6/AppStream/"
     - "/var/www/html/pub/kickstart/RHEL/8/8.6/BaseOs/" 
 - iso_mount_path: /mnt/isos/RHEL7/
-  iso_path: /mnt/cloud_isos/
+  iso_path: /mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso/
   os_type: "RHEL"
   os_major: 7
   os_minor: 9
