@@ -1,0 +1,60 @@
+foreman_locations:
+- name: hallas 
+
+foreman_architecture:
+- name: x86_64
+
+foreman_operatingsystems:
+- name:  "RedHat"
+  major: "8"
+  minor: "6"
+  os_family: "Redhat"
+  password_hash: "SHA256"
+  architectures: "x86_64"
+  description:   "KS RHEL 8.6"
+  default_templates:
+  - template_kind: "provision"
+    provisioning_template: "Kickstart default"
+  - template_kind: "PXELinux"
+    provisioning_template: "Kickstart default PXELinux"
+  - template_kind: "iPXE"
+    provisioning_template: "Kickstart default iPXE"
+  - template_kind: "PXEGrub"
+    provisioning_template: "Kickstart default PXEGrub"
+  - template_kind: "PXEGrub2"
+    provisioning_template: "Kickstart default PXEGrub2"
+  - template_kind: "finish"
+    provisioning_template: "Kickstart default finish"
+  - template_kind: "host_init_config"
+    state: absent
+  - template_kind: "kexec"
+    state: absent
+  - template_kind: "user_data"
+    state: absent
+
+foreman_products:
+- name: "Red Hat Kickstart 7"
+  repositories:
+  - name: kickstart 
+    content_type: file
+    unprotected: true
+    verify_ssl_on_sync: true
+    url:  "{{ foreman_server_url }}/pub/sat-imports"
+    description: "Kickstart repo managed by Ansible"
+    arch: x86_64
+- name: "Red Hat kickstart 8"
+  repositories:
+  - name: "kickstart BaseOS x86_64"
+    content_type: file
+    unprotected: true
+    verify_ssl_on_sync: true
+    url: "{{ foreman_server_url }}/pub/sat-imports"
+    description: "Kickstart repo managed by Ansible"
+    arch: x86_64
+  - name: "kickstart AppStream x86_64"
+    content_type: file
+    unprotected: true
+    verify_ssl_on_sync: true
+    description: "Kickstart repo managed by Ansible"
+    url: "{{ foreman_server_url }}/pub/sat-imports"
+    arch: x86_64

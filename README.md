@@ -1,1 +1,3 @@
-# remote_kickstart_installer
+# Ansible Collection - installer.kickstart
+
+Documentation for the collection.

@@ -1,0 +1,11 @@
+---
+# tasks file for architectures
+- name: "Create an Architecture"
+  theforeman.foreman.architecture:
+    name:       "{{ item['name'] }}"
+    server_url: "{{ foreman_server_url }}" 
+    username:   "{{ foreman_username }}" 
+    password:   "{{ foreman_password }}"
+    state:      "{{ item['state'] | default('present') }}"
+  loop: "{{ foreman_architecture }}"
+  when: foreman_architecture is defined

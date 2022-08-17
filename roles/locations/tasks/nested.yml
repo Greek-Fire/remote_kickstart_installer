@@ -1,0 +1,28 @@
+---
+- name: Add parent locations 
+  theforeman.foreman.location:
+    name: "{{ foreman_locations_item['parent'] }}"
+    description: "{{ foreman_locations_item.description | default(omit) }}"
+    server_url: "{{ foreman_server_url | default(omit) }}"
+    username: "{{ foreman_username | default(omit) }}"
+    password: "{{ foreman_password | default(omit) }}"
+    validate_certs: "{{ foreman_validate_certs | default(omit) }}"
+    state: "{{ foreman_locations_item.state | default('present') }}"
+  loop: "{{ foreman_locations | default([]) }}"
+  when: foreman_locations_item['parent'] is defined
+  loop_control:
+    loop_var: foreman_locations_item
+
+- name: Add locations 
+  theforeman.foreman.location:
+    name: "{{ foreman_locations_item.name }}"
+    description: "{{ foreman_locations_item.description | default(omit) }}"
+    server_url: "{{ foreman_server_url | default(omit) }}"
+    username: "{{ foreman_username | default(omit) }}"
+    password: "{{ foreman_password | default(omit) }}"
+    validate_certs: "{{ foreman_validate_certs | default(omit) }}"
+    state: "{{ foreman_locations_item.state | default('present') }}"
+    parent: "{{ foreman_locations_item.parent | default(omit) }}"
+  loop: "{{ foreman_locations | default([]) }}"
+  loop_control:
+    loop_var: foreman_locations_item

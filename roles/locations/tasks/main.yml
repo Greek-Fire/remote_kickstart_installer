@@ -1,0 +1,5 @@
+- include_tasks: non_nested.yml
+  loop_control:
+      loop_var: foreman_locations_item
+  loop: "{{ foreman_locations }}"
+  when: foreman_locations is defined
