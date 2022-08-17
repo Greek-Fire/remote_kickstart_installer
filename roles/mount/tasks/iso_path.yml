@@ -12,7 +12,7 @@
 
   - assert:
       that:
-      - "{{ item['iso_test']['stat']['mimetype'] }} == 'application/x-iso9660-image'"
+      - "{{ iso_test['stat']['mimetype'] }} == 'application/x-iso9660-image'"
       msg: 
       - validate that "{{ item['iso_path'] }} exists and that it is an iso."
 
