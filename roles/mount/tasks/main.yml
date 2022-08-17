@@ -3,6 +3,3 @@
 
 - include_tasks: iso_path.yml
   loop: "{{ foreman_kickstart | default([]) }}"
-
-- include_tasks: copy.yml
-  loop: "{{ foreman_kickstart | default([]) }}"

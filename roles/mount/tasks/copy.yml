@@ -1,30 +1,46 @@
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
     remote_src: true
-    src:  "{{ item['copy_path'] }}"
-    dest: "{{ item['web_path'] }}"
+    src:  "{{ path['copy_path'] }}"
+    dest: "{{ path['web_path'] }}"
     owner: apache
     group: apache
-  loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
+  when: path['web_path'] is defined
+
+- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
+  copy:
+    remote_src: true
+    src:  "{{ path['appstream_copy_path'] }}"
+    dest: "{{ path['appstream_web_path'] }}"
+    owner: apache
+    group: apache
+  when: path['appstream_web_path'] is defined
+
+- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
+  copy:
+    remote_src: true
+    src:  "{{ path['baseos_copy_path'] }}"
+    dest: "{{ path['baseos_web_path'] }}"
+    owner: apache
+    group: apache
+  when: path['basos_web_path'] is defined
 
 - name: generate treeinfo
   template:
-    src:  "{{ jinja_temp }}"
-    dest: "{{ item['web_path'] }}"
+    src:  "{{ jinja_path }}"
+    dest: "{{ path['appstream_web_path'] }}"
     owner: apache
     group: apache
-  when: "{{ item['appstream_repo'] | bool }}"
-  loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
+ when: path['appstream_web_path'] is defined
   vars:
-    jinja_temp: AppStream.j2
+    jinja_path: AppStream.j2
 
 - name: generate treeinfo
   template:
-    src:  "{{ jinja_temp }}"
-    dest: "{{ item['web_path'] }}"
+    src:  "{{ jinja_path }}"
+    dest: "{{ path['baseos_web_path'] }}"
     owner: apache
     group: apache
-  when: "{{ item['baseos_repo'] | bool }}"
-  loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
+  when: path['baseos_web_path'] is defined
   vars:
-    jinja_temp: BaseOS.j2
+    jinja_path: BaseOS.j2

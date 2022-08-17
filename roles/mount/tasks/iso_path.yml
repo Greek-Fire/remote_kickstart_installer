@@ -43,3 +43,12 @@
     fstype: "iso9660"
     opts:  "ro,noauto"
     state: "mounted"
+
+- set_fact:
+    os_major: "{{ item['os_major'] }}"
+    os_minor: "{{ item['os_minor'] }}"
+
+- include_tasks: copy.yml
+  loop: "{{ item['kickstart_publish_paths'] }}"
+  loop_control:
+    loop_var: path
