@@ -4,7 +4,7 @@
     recurse: true
     state: directory
 
-- name: "loop through {{ item['kickstart_publish_paths'] }}"
+- name: "loop through kickstart_publish_paths }}"
   file:
     path: "{{ item['web_path'] }}"
     recurse: true
@@ -42,4 +42,4 @@
     src:    "{{ item['iso_path'] }}"
     fstype: "iso9660"
     opts:  "ro,noauto"
-    state: "present"
+    state: "mounted"

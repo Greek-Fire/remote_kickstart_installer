@@ -1,8 +1,8 @@
-- name: "copy from iso mount to web {{ foreman_server_url }}"
-  ansible.copy:
+- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
+  copy:
     remote_src: true
     src:  "{{ item['copy_path'] }}"
     dest: "{{ item['web_path'] }}"
-    ower: apache
+    owner: apache
     group: apache
-  loop: "{{ item['kickstart_publish_paths'] }}"
+  loop: "{{ item['kickstart_publish_paths'] | default([]) }}"
