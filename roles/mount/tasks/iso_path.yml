@@ -1,0 +1,18 @@
+- name: "create directory path for temporary mount location"
+  file:
+    path: "{{ item['iso_mount_path'] }}"
+    recurse: true
+    state: directory
+
+- name: "verify that {{ iso_path }} is an iso_mount_path"
+  stat: 
+    path: "{{ iso_path }}"
+  register: iso_type
+
+- name: "mounting {{ item['iso_path'] }} to {{ item['iso_mount_path'] }}"
+  mount:
+    path:   "{{ item['iso_mount_path'] }}"
+    src:    "{{ item['iso_path'] }}"
+    fstype: "iso9660"
+    opts:  "ro,noauto"
+    state: "present"
