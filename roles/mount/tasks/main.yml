@@ -3,3 +3,6 @@
 
 - include_tasks: iso_path.yml
   loop: "{{ foreman_kickstart }}"
+
+- include_tasks: copy.yml
+  loop: "{{ foreman_kickster }}"
