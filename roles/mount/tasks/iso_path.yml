@@ -35,10 +35,11 @@
       - "!!! READ ME !!!"
       - "validate that {{ item['iso_path'] }} exists and that it is an iso."
     when: type is not defined
+  when: bob | bool
 
-- name: "mounting {{ item['iso_path'] }} to {{ item['iso_mount_path'] }}"
+- name: "mounting {{ item['iso_path'] }} to {{ item['mount_path'] }}"
   mount:
-    path:   "{{ item['iso_mount_path'] }}"
+    path:   "{{ item['mount_path'] }}"
     src:    "{{ item['iso_path'] }}"
     fstype: "iso9660"
     opts:  "ro,noauto"
@@ -49,6 +50,14 @@
     remote_src: true
     src:  "{{ item['copy_path'] }}"
     dest: "{{ item['web_path'] }}"
+    owner: apache
+    group: apache
+  when: item['web_path'] is defined
+
+- name: "copy 7 pulp manifest"
+  copy:
+    src:  "7_pulp_manifest"
+    dest: "{{ item['web_path'] }}/PULP_MANIFEST"
     owner: apache
     group: apache
   when: item['web_path'] is defined
