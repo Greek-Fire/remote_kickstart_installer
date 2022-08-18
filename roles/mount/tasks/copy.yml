@@ -1,11 +1,18 @@
-- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
-  copy:
-    remote_src: true
-    src:  "{{ path['copy_path'] }}"
-    dest: "{{ path['web_path'] }}"
-    owner: apache
-    group: apache
-  when: path['web_path'] is defined
+- set_fact:
+    os_major: "{{ item['os_major'] }}"
+    os_minor: "{{ item['os_minor'] }}"
+
+- name: "create the web path: {{ item['appstream_web_path'] }}"
+  file:
+    path: "{{ path['appstream_web_path'] }}"
+    recurse: true
+    state: directory
+
+- name: "create the web path: {{ path['baseos_web_path'] }}"
+  file:
+    path: "{{ path['baseos_web_path'] }}"
+    recurse: true
+    state: directory
 
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
@@ -14,7 +21,6 @@
     dest: "{{ path['appstream_web_path'] }}"
     owner: apache
     group: apache
-  when: path['appstream_web_path'] is defined
 
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
@@ -23,7 +29,6 @@
     dest: "{{ path['baseos_web_path'] }}"
     owner: apache
     group: apache
-  when: path['basos_web_path'] is defined
 
 - name: generate treeinfo
   template:

@@ -1,15 +1,14 @@
 - name: "create directory path for temporary mount location"
   file:
-    path: "{{ item['iso_mount_path'] }}"
+    path: "{{ item['mount_path'] }}"
     recurse: true
     state: directory
 
-- name: "loop through kickstart_publish_paths }}"
+- name: "create the web path: {{ item['web_path'] }}"
   file:
     path: "{{ item['web_path'] }}"
     recurse: true
     state: directory
-  loop: "{{ item['kickstart_publish_paths'] }}"
 
 - name: "verify  {{ item['iso_path'] }}"
   block:
@@ -44,11 +43,17 @@
     opts:  "ro,noauto"
     state: "mounted"
 
-- set_fact:
-    os_major: "{{ item['os_major'] }}"
-    os_minor: "{{ item['os_minor'] }}"
+- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
+  copy:
+    remote_src: true
+    src:  "{{ item['copy_path'] }}"
+    dest: "{{ item['web_path'] }}"
+    owner: apache
+    group: apache
+  when: item['web_path'] is defined
 
 - include_tasks: copy.yml
   loop: "{{ item['kickstart_publish_paths'] }}"
+  when: item['kickstart_publish_paths'] is defined
   loop_control:
     loop_var: path
