@@ -1,6 +1,6 @@
 - set_fact:
-    os_major: "{{ os_major }}"
-    os_minor: "{{ os_minor }}"
+    os_major: "{{ item['os_major'] }}"
+    os_minor: "{{ item['os_minor'] }}"
 
 - name: "create the web path: {{ path['appstream_web_path'] }}"
   file:
@@ -33,7 +33,7 @@
 - name: generate treeinfo
   template:
     src:  "{{ jinja_path }}"
-    dest: "{{ path['appstream_web_path'] }}"
+    dest: "{{ path['appstream_web_path'] }}/AppStream/treeinfo"
     owner: apache
     group: apache
   vars:
@@ -42,7 +42,7 @@
 - name: generate treeinfo
   template:
     src:  "{{ jinja_path }}"
-    dest: "{{ path['baseos_web_path'] }}"
+    dest: "{{ path['baseos_web_path'] }}/BaseOS/treeinfo"
     owner: apache
     group: apache
   vars:
