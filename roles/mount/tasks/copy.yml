@@ -1,26 +1,25 @@
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
     src:  "{{ temp }}"
-    dest: "{{ rhel8['appstream_pulp_path'] }}"
+    dest: "{{ item['web_path'] }}"
     owner: apache
     group: apache
     remote_src: true
   vars:
-    temp: "{{ item['mount_path'] }}/{{ rhel8['appstream_pulp_path'].split('/')[0] }}" 
+    temp: "{{ item['mount_path'] }}/AppStream"
 
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
     src:  "{{ temp }}"
-    dest: "{{ rhel8['baseos_pulp_path'] }}"
+    dest: "{{ item['web_path'] }}"
     owner: apache
     group: apache
     remote_src: true
   vars:
-    temp: "{{ item['mount_path'] }}/{{ rhel8['baseos_pulp_path'].split('/')[0] }}"
+    temp: "{{ item['mount_path'] }}/BaseOS"
 
 - set_fact:
     baseos: "{{ dir | difference(temp) }}"
-    test: ["{{ item['mount_path'] }}/AppStream","{{ item['mount_path'] }}/BaseOS"]
   vars:
     temp: ["{{ item['mount_path'] }}/AppStream","{{ item['mount_path'] }}/BaseOS"]  
 

@@ -11,8 +11,8 @@ foreman_kickstart:
 - mount_path: "/mnt/isos/RHEL8"
   iso_path:   "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
   rhel8: 
-  - appstream_pulp_path: "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/BaseOS"
-    baseos_pulp_path:    "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/AppStream"
+  - appstream_pulp_path: "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/AppStream"
+    baseos_pulp_path:    "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/BaseOS"
   web_path:   "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64"
   copy_path:  "/mnt/isos/RHEL8/"
   #- mount_path: "/mnt/isos/RHEL7"
