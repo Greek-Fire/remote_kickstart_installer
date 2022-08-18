@@ -1,0 +1,10 @@
+- hosts: localhost
+  gather_facts: false
+  tasks:
+          - find:
+                  path: /mnt/isos/RHEL8
+                  recurse: no
+            register: files
+
+          - set_fact:
+                  test: "{{ files['files'] | map(attribute='path') }}"

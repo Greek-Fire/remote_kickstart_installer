@@ -2,62 +2,71 @@
     os_major: "{{ item['os_major'] }}"
     os_minor: "{{ item['os_minor'] }}"
 
-- name: "create the web path: {{ path['appstream_web_path'] }}"
+- name: "create the web item: {{ item['web_path'] }}"
   file:
-    path: "{{ path['appstream_web_path'] }}"
+    path: "{{ item['web_path'] }}"
     recurse: true
     state: directory
 
-- name: "create the web path: {{ path['baseos_web_path'] }}"
-  file:
-    path: "{{ path['baseos_web_path'] }}"
-    recurse: true
-    state: directory
+- name: find all required directories
+  find:
+    paths: "{{ item['copy_path'] }}"
+    recurse: no 
+    file_type: directory
+  register: dir
+
+- name: find all required files
+  find:
+    paths: "{{ item['copy_path'] }}"
+    recurse: no
+    file_type: file
+  register: files
+
+- set_fact:
+    files: "{{ files['files'] | map(attribute='path') }}"
+    dir: "{{ dir['files'] | map(attribute='path') }}"
 
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
     remote_src: true
-    src:  "{{ path['appstream_copy_path'] }}"
-    dest: "{{ path['appstream_web_path'] }}"
+    src:  "{{ temp }}" 
+    dest: "{{ item['web_path'] }}"
     owner: apache
     group: apache
-
-- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
-  copy:
-    remote_src: true
-    src:  "{{ path['baseos_copy_path'] }}"
-    dest: "{{ path['baseos_web_path'] }}"
-    owner: apache
-    group: apache
+  loop_control:
+    loop_var: temp
+  with_items: 
+  - "{{ files }}"
+  - "{{ dir }}"
 
 - name: "copy pulp manifest"
   copy:
     src:  "8_appstream_pulp_manifest"
-    dest: "{{ path['appstream_web_path'] }}/AppStream/PULP_MANIFEST"
+    dest: "{{ item['web_path'] }}/AppStream/PULP_MANIFEST"
     owner: apache
     group: apache
 
 - name: "copy pulp manifest"
   copy:
     src:  "8_baseos_pulp_manifest"
-    dest: "{{ path['baseos_web_path'] }}/BaseOS/PULP_MANIFEST"
+    dest: "{{ item['web_path'] }}/BaseOS/PULP_MANIFEST"
     owner: apache
     group: apache
 
 - name: generate treeinfo
   template:
-    src:  "{{ jinja_path }}"
-    dest: "{{ path['appstream_web_path'] }}/AppStream/treeinfo"
+    src:  "{{ jinja_item }}"
+    dest: "{{ item['web_path'] }}/AppStream/treeinfo"
     owner: apache
     group: apache
   vars:
-    jinja_path: AppStream.j2
+    jinja_item: AppStream.j2
 
 - name: generate treeinfo
   template:
-    src:  "{{ jinja_path }}"
-    dest: "{{ path['baseos_web_path'] }}/BaseOS/treeinfo"
+    src:  "{{ jinja_item }}"
+    dest: "{{ item['web_path'] }}/BaseOS/treeinfo"
     owner: apache
     group: apache
   vars:
-    jinja_path: BaseOS.j2
+    jinja_item: BaseOS.j2

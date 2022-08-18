@@ -12,15 +12,30 @@ foreman_kickstart:
   iso_path: "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
   os_major: 8
   os_minor: 6
-  kickstart_RHEL8_paths:
-  - appstream_web_path:  "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64"
-    appstream_copy_path: "/mnt/isos/RHEL8/AppStream"
-    baseos_web_path:  "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64"
-    baseos_copy_path: "/mnt/isos/RHEL8/BaseOS"
+  web_path:  "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64"
+  copy_path: "/mnt/isos/RHEL8/"
 - mount_path: /mnt/isos/RHEL7
   iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
   web_path:  "{{ foreman_web_path }}kickstart/RHEL/7/7.9/x86_64"
   copy_path: "/mnt/isos/RHEL7/"
+
+foreman_subnets:
+ - name: "192.168.1.0"
+   description: "Ansible created this subnet"
+   network: "192.168.1.0"
+   mask: "255.255.255.0"
+   gateway: "192.168.1.1"
+   boot_mode: "Static"
+   dns_primary: "192.168.1.2"
+   template_proxy: "sat.example.net"
+   remote_execution_proxies:
+   - "sat.example.net"
+   domains:
+   - "example.net"
+   organizations:
+   - "hallas"
+   locations:
+   - "hallas"
 
 foreman_operatingsystems:
 - name:  "RedHat"

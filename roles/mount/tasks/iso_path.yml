@@ -63,7 +63,5 @@
   when: item['web_path'] is defined
 
 - include_tasks: copy.yml
-  loop: "{{ item['kickstart_RHEL8_paths'] }}"
-  when: item['kickstart_RHEL8_paths'] is defined
-  loop_control:
-    loop_var: path
+  loop: "{{ foreman_kickstart | default([]) }}"  
+  when: "{{ item['os_major'] is defined }}"
