@@ -10,8 +10,8 @@ images/pxeboot/vmlinuz = sha256:aab313061ddbd514a18529cc3428718deafe1121791d1d9a
 arch = x86_64
 family = Red Hat Enterprise Linux
 name = Red Hat Enterprise Linux {{ os_major }}.{{ os_minor }}
-packagedir = Packages
-platforms = x86_64
+packagedir = AppStream/Packages
+platforms = x86_64,xen
 repository = .
 timestamp = 1650472688
 variant = BaseOS
@@ -31,6 +31,10 @@ kernel = images/pxeboot/vmlinuz
 initrd = images/pxeboot/initrd.img
 kernel = images/pxeboot/vmlinuz
 
+[media]
+discnum = 1
+totaldiscs = 1
+
 [release]
 name = Red Hat Enterprise Linux
 short = RHEL
@@ -42,13 +46,14 @@ mainimage = images/install.img
 [tree]
 arch = x86_64
 build_timestamp = 1650472688
-platforms = x86_64
+platforms = x86_64,xen
 variants = BaseOS
 
 [variant-BaseOS]
 id = BaseOS
 name = BaseOS
 packages = Packages
-repository = .
+repository = . 
 type = variant
 uid = BaseOS
+

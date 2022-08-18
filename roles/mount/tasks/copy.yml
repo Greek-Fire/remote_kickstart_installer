@@ -33,14 +33,14 @@
 - name: "copy pulp manifest"
   copy:
     src:  "8_appstream_pulp_manifest"
-    dest: "{{ path['appstream_web_path'] }}/PULP_MANIFEST"
+    dest: "{{ path['appstream_web_path'] }}/AppStream/PULP_MANIFEST"
     owner: apache
     group: apache
 
 - name: "copy pulp manifest"
   copy:
     src:  "8_baseos_pulp_manifest"
-    dest: "{{ path['baseos_web_path'] }}/PULP_MANIFEST"
+    dest: "{{ path['baseos_web_path'] }}/BaseOS/PULP_MANIFEST"
     owner: apache
     group: apache
 
