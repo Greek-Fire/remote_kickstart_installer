@@ -1,72 +1,79 @@
-- set_fact:
-    os_major: "{{ item['os_major'] }}"
-    os_minor: "{{ item['os_minor'] }}"
-
-- name: "create the web item: {{ item['web_path'] }}"
-  file:
-    path: "{{ item['web_path'] }}"
-    recurse: true
-    state: directory
-
-- name: find all required directories
-  find:
-    paths: "{{ item['copy_path'] }}"
-    recurse: no 
-    file_type: directory
-  register: dir
-
-- name: find all required files
-  find:
-    paths: "{{ item['copy_path'] }}"
-    recurse: no
-    file_type: file
-  register: files
-
-- set_fact:
-    files: "{{ files['files'] | map(attribute='path') }}"
-    dir: "{{ dir['files'] | map(attribute='path') }}"
+- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
+  copy:
+    src:  "{{ temp }}"
+    dest: "{{ rhel8['appstream_pulp_path'] }}"
+    owner: apache
+    group: apache
+    remote_src: true
+  vars:
+    temp: "{{ item['mount_path'] }}/{{ rhel8['appstream_pulp_path'].split('/')[0] }}" 
 
 - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
   copy:
-    remote_src: true
-    src:  "{{ temp }}" 
-    dest: "{{ item['web_path'] }}"
+    src:  "{{ temp }}"
+    dest: "{{ rhel8['baseos_pulp_path'] }}"
     owner: apache
     group: apache
+    remote_src: true
+  vars:
+    temp: "{{ item['mount_path'] }}/{{ rhel8['baseos_pulp_path'].split('/')[0] }}"
+
+- set_fact:
+    baseos: "{{ dir | difference(temp) }}"
+    test: ["{{ item['mount_path'] }}/AppStream","{{ item['mount_path'] }}/BaseOS"]
+  vars:
+    temp: ["{{ item['mount_path'] }}/AppStream","{{ item['mount_path'] }}/BaseOS"]  
+
+- name: copy dirs to baseos
+  copy:
+    src:  "{{ temp_item }}"
+    dest: "{{ rhel8['baseos_pulp_path'] }}"
+    owner: apache
+    group: apache
+    remote_src: true
+  loop: "{{ baseos }}"
   loop_control:
-    loop_var: temp
-  with_items: 
-  - "{{ files }}"
-  - "{{ dir }}"
+    loop_var: temp_item
+
+- name: copy files to baseos
+  copy:
+    src:  "{{ temp_item }}"
+    dest: "{{ rhel8['baseos_pulp_path'] }}"
+    owner: apache
+    group: apache
+    remote_src: true
+  loop: "{{ files }}"
+  loop_control:
+    loop_var: temp_item
 
 - name: "copy pulp manifest"
   copy:
     src:  "8_appstream_pulp_manifest"
-    dest: "{{ item['web_path'] }}/AppStream/PULP_MANIFEST"
+    dest: "{{ rhel8['appstream_pulp_path'] }}/PULP_MANIFEST"
     owner: apache
     group: apache
 
 - name: "copy pulp manifest"
   copy:
     src:  "8_baseos_pulp_manifest"
-    dest: "{{ item['web_path'] }}/BaseOS/PULP_MANIFEST"
+    dest: "{{ rhel8['baseos_pulp_path'] }}/PULP_MANIFEST"
     owner: apache
     group: apache
 
 - name: generate treeinfo
   template:
-    src:  "{{ jinja_item }}"
-    dest: "{{ item['web_path'] }}/AppStream/treeinfo"
+    src:  "{{ jinja_rhel8 }}"
+    dest: "{{ rhel8['appstream_pulp_path'] }}/treeinfo"
     owner: apache
     group: apache
   vars:
-    jinja_item: AppStream.j2
+    jinja_rhel8: AppStream.j2
 
 - name: generate treeinfo
   template:
-    src:  "{{ jinja_item }}"
-    dest: "{{ item['web_path'] }}/BaseOS/treeinfo"
+    src:  "{{ jinja_rhel8 }}"
+    dest: "{{ rhel8['baseos_pulp_path'] }}/treeinfo"
     owner: apache
     group: apache
   vars:
-    jinja_item: BaseOS.j2
+    jinja_rhel8: BaseOS.j2

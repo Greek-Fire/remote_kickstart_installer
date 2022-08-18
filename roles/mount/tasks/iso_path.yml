@@ -42,26 +42,57 @@
     path:   "{{ item['mount_path'] }}"
     src:    "{{ item['iso_path'] }}"
     fstype: "iso9660"
-    opts:  "ro,noauto"
-    state: "mounted"
+    opts:   "ro,noauto"
+    state:  "mounted"
 
-- name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
-  copy:
-    remote_src: true
-    src:  "{{ item['copy_path'] }}"
-    dest: "{{ item['web_path'] }}"
-    owner: apache
-    group: apache
-  when: item['web_path'] is defined
+- name: "create the web item: {{ item['web_path'] }}"
+  file:
+    path: "{{ item['web_path'] }}"
+    recurse: true
+    state: directory
 
-- name: "copy 7 pulp manifest"
-  copy:
-    src:  "7_pulp_manifest"
-    dest: "{{ item['web_path'] }}/PULP_MANIFEST"
-    owner: apache
-    group: apache
-  when: item['web_path'] is defined
+- name: find all required directories
+  find:
+    paths: "{{ item['copy_path'] }}"
+    recurse: no
+    file_type: directory
+  register: dir
+  
+- name: find all required files
+  find:
+    paths: "{{ item['copy_path'] }}"
+    recurse: no
+    file_type: file
+  register: files
+  
+- set_fact:
+    files: "{{ files['files'] | map(attribute='path') }}"
+    dir:   "{{ dir['files'] | map(attribute='path') }}"
+ 
+- block:  
+  - name: "copy from iso mount to {{ foreman_server_url }}/pub/***"
+    copy:
+      remote_src: true
+      src:  "{{ temp }}"
+      dest: "{{ item['web_path'] }}"
+      owner: apache
+      group: apache
+    loop_control:
+      loop_var: temp
+    with_items:
+    - "{{ files }}"
+    - "{{ dir }}"
+
+  - name: "copy 7 pulp manifest"
+    copy:
+      src:  "7_pulp_manifest"
+      dest: "{{ item['web_path'] }}/PULP_MANIFEST"
+      owner: apache
+      group: apache
+  when: item['rhel8'] is not defined
 
 - include_tasks: copy.yml
-  loop: "{{ foreman_kickstart | default([]) }}"  
-  when: "{{ item['os_major'] is defined }}"
+  loop: "{{ item['rhel8'] }}"  
+  loop_control:
+    loop_var: rhel8
+  when: item['rhel8'] is defined
