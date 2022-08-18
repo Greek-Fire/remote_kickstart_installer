@@ -1,8 +1,8 @@
 - set_fact:
-    os_major: "{{ item['os_major'] }}"
-    os_minor: "{{ item['os_minor'] }}"
+    os_major: "{{ os_major }}"
+    os_minor: "{{ os_minor }}"
 
-- name: "create the web path: {{ item['appstream_web_path'] }}"
+- name: "create the web path: {{ path['appstream_web_path'] }}"
   file:
     path: "{{ path['appstream_web_path'] }}"
     recurse: true
@@ -36,7 +36,6 @@
     dest: "{{ path['appstream_web_path'] }}"
     owner: apache
     group: apache
- when: path['appstream_web_path'] is defined
   vars:
     jinja_path: AppStream.j2
 
@@ -46,6 +45,5 @@
     dest: "{{ path['baseos_web_path'] }}"
     owner: apache
     group: apache
-  when: path['baseos_web_path'] is defined
   vars:
     jinja_path: BaseOS.j2

@@ -8,20 +8,19 @@ foreman_web_path: "/var/www/html/pub/"
 foreman_web_url:  "https://{{ sat_fqdn }}/pub/"
 
 foreman_kickstart:
-- iso_mount_path: /mnt/isos/RHEL8
+- mount_path: /mnt/isos/RHEL8
   iso_path: "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
   os_major: 8
   os_minor: 6
-  kickstart_publish_paths:
+  kickstart_RHEL8_paths:
   - appstream_web_path:  "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/"
     appstream_copy_path: "/mnt/isos/RHEL8/AppStream"
     baseos_web_path:  "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/"
     baseos_copy_path: "/mnt/isos/RHEL8/BaseOS"
-- iso_mount_path: /mnt/isos/RHEL7
+- mount_path: /mnt/isos/RHEL7
   iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-  kickstart_publish_paths:
-     web_path:  "{{ foreman_web_path }}kickstart/RHEL/7/7.9/x86_64/"
-     copy_path: "/mnt/isos/RHEL7/"
+  web_path:  "{{ foreman_web_path }}kickstart/RHEL/7/7.9/x86_64/"
+  copy_path: "/mnt/isos/RHEL7/"
 
 foreman_operatingsystems:
 - name:  "RedHat"

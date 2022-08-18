@@ -9,6 +9,7 @@
     path: "{{ item['web_path'] }}"
     recurse: true
     state: directory
+  when: item['web_path'] is defined
 
 - name: "verify  {{ item['iso_path'] }}"
   block:
@@ -53,7 +54,7 @@
   when: item['web_path'] is defined
 
 - include_tasks: copy.yml
-  loop: "{{ item['kickstart_publish_paths'] }}"
-  when: item['kickstart_publish_paths'] is defined
+  loop: "{{ item['kickstart_RHEL8_paths'] }}"
+  when: item['kickstart_RHEL8_paths'] is defined
   loop_control:
     loop_var: path
