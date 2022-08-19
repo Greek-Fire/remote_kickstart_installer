@@ -1,0 +1,21 @@
+- name: run repo role
+  include_role:
+    name: repositories
+
+- name: validate repo
+  theforeman.foreman.repository_info:
+    username: "{{ foreman_username }}"
+    password: "{{ foreman_password }}"
+    server_url: "{{ foreman_server_url }}"
+    name: "{{ temp['name'] }}"
+    product: "{{ item['name'] }}"
+    organization: "{{ foreman_organization }}"
+  loop: "{{ item['repositories'] }}"
+  register: temp
+  loop_control:
+    loop_var: temp
+
+- include_role:
+    name: 
+  when: temp['repository']['content_counts']['file'] == 0
+

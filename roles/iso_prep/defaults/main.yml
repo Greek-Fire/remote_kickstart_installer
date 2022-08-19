@@ -1,0 +1,3 @@
+os_major: 8
+os_minor: 0
+baseos: ['BaseOS']

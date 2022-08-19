@@ -7,18 +7,11 @@ foreman_architecture:
 sat_fqdn: sat.example.net
 foreman_web_path: "/var/www/html/pub/"
 
-foreman_kickstart:
-- mount_path: "/mnt/isos/RHEL8"
-  iso_path:   "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
-  rhel8: 
-  - appstream_pulp_path: "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/AppStream"
-    baseos_pulp_path:    "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64/BaseOS"
-  web_path:   "{{ foreman_web_path }}kickstart/RHEL/8/8.6/x86_64"
-  copy_path:  "/mnt/isos/RHEL8/"
-  #- mount_path: "/mnt/isos/RHEL7"
-  #iso_path:  "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-  #web_path:  "{{ foreman_web_path }}kickstart/RHEL/7/7.9/x86_64"
-  #copy_path: "/mnt/isos/RHEL7/"
+foreman_isos:
+- iso_path:   "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
+  web_path:   "{{ foreman_web_path }}pub/ISOS/"
+- iso_path:  "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
+  web_path:  "{{ foreman_web_path }}pub/ISOS/"
 
 foreman_subnets:
  - name: "192.168.1.0"
@@ -65,30 +58,62 @@ foreman_operatingsystems:
     state: absent
   - template_kind: "user_data"
     state: absent
+- name:  "RedHat"
+  major: "7"
+  minor: "9"
+  os_family: "Redhat"
+  password_hash: "SHA256"
+  architectures: "x86_64"
+  description:   "KS RHEL 7.9"
+  default_templates:
+  - template_kind: "provision"
+    provisioning_template: "Kickstart default"
+  - template_kind: "PXELinux"
+    provisioning_template: "Kickstart default PXELinux"
+  - template_kind: "iPXE"
+    provisioning_template: "Kickstart default iPXE"
+  - template_kind: "PXEGrub"
+    provisioning_template: "Kickstart default PXEGrub"
+  - template_kind: "PXEGrub2"
+    provisioning_template: "Kickstart default PXEGrub2"
+  - template_kind: "finish"
+    provisioning_template: "Kickstart default finish"
+  - template_kind: "host_init_config"
+    state: absent
+  - template_kind: "kexec"
+    state: absent
+  - template_kind: "user_data"
+    state: absent
 
 foreman_products:
-- name: "Red Hat Kickstart 7"
+- name: "Red Hat ISO Content"
   repositories:
-  - name: kickstart
+  - name: "Red Hat 7 ISO"
     content_type: file
     unprotected: true
     verify_ssl_on_sync: true
-    url:  "{{ foreman_server_url }}/pub/kickstart/RHEL/7/7.9/x86_64"
-    description: "Kickstart repo managed by Ansible"
+    description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
+    url:  "{{ foreman_server_url }}/pub/ISOS/RHEL7"
     arch: x86_64
-- name: "Red Hat kickstart 8"
+    iso_path: "{{ foreman_web_path }}/ISOS/RHEL7"
+  isos:
+    iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
+    web_path: "{{ foreman_web_path }}pub/ISOS/" 
+- name: "Red Hat ISO Content"
   repositories:
-  - name: "kickstart BaseOS x86_64"
+  - name: "Red Hat 8 ISO"
     content_type: file
     unprotected: true
     verify_ssl_on_sync: true
-    url: "{{ foreman_server_url }}/pub/kickstart/RHEL/8/8.6/x86_64/BaseOS"
-    description: "Kickstart repo managed by Ansible"
+    description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
+    iso_path: "{{ foreman_web_path }}/ISOS/RHEL8"
+    url: "{{ foreman_server_url }}/pub/ISOS/RHEL8"
     arch: x86_64
-  - name: "kickstart AppStream x86_64"
-    content_type: file
-    unprotected: true
-    verify_ssl_on_sync: true
-    description: "Kickstart repo managed by Ansible"
-    url: "{{ foreman_server_url }}/pub/kickstart/RHEL/8/8.6/x86_64/AppStream"
-    arch: x86_64
+    isos:
+      iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
+      web_path: "{{ foreman_web_path }}pub/ISOS/"
+- name: kickstart
+  all_repositories: true
+  labels:
+  - rhel-8-for-x86_64-appstream-kickstart 
+  - rhel-8-for-x86_64-baseos-kickstart

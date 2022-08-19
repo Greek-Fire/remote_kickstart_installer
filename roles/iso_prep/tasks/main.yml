@@ -1,0 +1,5 @@
+---
+# tasks file for mount
+
+- include_tasks: iso_path.yml
+  loop: "{{ foreman_kickstart | default([]) }}"
