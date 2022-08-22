@@ -7,12 +7,6 @@ foreman_architecture:
 sat_fqdn: sat.example.net
 foreman_web_path: "/var/www/html/pub/"
 
-foreman_isos:
-- iso_path:   "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
-  web_path:   "{{ foreman_web_path }}pub/ISOS/"
-- iso_path:  "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-  web_path:  "{{ foreman_web_path }}pub/ISOS/"
-
 foreman_subnets:
  - name: "192.168.1.0"
    description: "Ansible created this subnet"
@@ -97,7 +91,7 @@ foreman_products:
     arch: x86_64
   isos:
     - iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-      web_path: "{{ foreman_web_path }}pub/ISOS/" 
+      web_path: "{{ foreman_web_path }}/ISOS/" 
 - name: "Red Hat ISO Content"
   repositories:
   - name: "Red Hat 8 ISO"
@@ -109,7 +103,7 @@ foreman_products:
     arch: x86_64
   isos:
     - iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-      web_path: "{{ foreman_web_path }}pub/ISOS/RHEL7"
+      web_path: "{{ foreman_web_path }}/ISOS/RHEL7"
 - name: kickstart
   all_repositories: true
   labels:

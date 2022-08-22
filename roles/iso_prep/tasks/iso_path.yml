@@ -29,7 +29,7 @@
       - "!!! READ ME !!!"
       - "validate that {{ item[0]['iso_path'] }} exists and that it is an iso."
     when: type is not defined
-  when: no_val | bool
+  when: iso_val | bool
 
 - name: copy {{ item[0]['iso_path'] }} to {{ item[0]['web_path'] }}
   copy:
