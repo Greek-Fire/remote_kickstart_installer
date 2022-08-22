@@ -1,0 +1,8 @@
+- name: "Sync repository"
+  theforeman.foreman.repository_sync:
+    username:   "{{ foreman_username }}"
+    password:   "{{ foreman_password }}"
+    server_url: "{{ foreman_server_url }}"
+    repository: "{{ sync[1]['name'] }}"
+    product:    "{{ sync[0]['name'] }}"
+    organization: "{{ foreman_organization }}"

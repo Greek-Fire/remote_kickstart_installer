@@ -1,10 +1,9 @@
 - hosts: localhost
   gather_facts: false
   tasks:
-          - find:
-                  path: /mnt/isos/RHEL8
-                  recurse: no
-            register: files
-
-          - set_fact:
-                  test: "{{ files['files'] | map(attribute='path') }}"
+    - uri:
+        url: https://sat.example.net/katello/api/repositories/24/upload_content
+        force_basic_auth: true
+        method: POST
+        username: admin
+        password: redhat
