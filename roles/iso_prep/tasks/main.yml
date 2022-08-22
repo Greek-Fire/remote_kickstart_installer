@@ -2,4 +2,4 @@
 # tasks file for mount
 
 - include_tasks: iso_path.yml
-  loop: "{{ foreman_kickstart | default([]) }}"
+  loop: "{{ foreman_products | selectattr('isos', 'defined') | map(attribute='isos') | list }}"

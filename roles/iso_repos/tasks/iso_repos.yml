@@ -1,17 +1,3 @@
-- name: 'Create Products'
-  theforeman.foreman.product:
-    username: "{{ foreman_username | default(omit) }}"
-    password: "{{ foreman_password | default(omit) }}"
-    server_url: "{{ foreman_server_url | default(omit) }}"
-    validate_certs: "{{ foreman_validate_certs | default(omit) }}"
-    organization: "{{ foreman_organization }}"
-    name: "{{ item.name }}"
-    label: "{{ item.label | default(omit) }}"
-    gpg_key: "{{ item.gpg_key | default(omit) }}"
-    state: present
-  with_items:
-    - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
-
 - name: 'Create Repositories'
   theforeman.foreman.repository:
     username: "{{ foreman_username | default(omit) }}"
@@ -52,10 +38,10 @@
     upstream_username: "{{ repo.1.upstream_username | default(omit) }}"
     verify_ssl_on_sync: "{{ repo.1.verify_ssl_on_sync | default(omit) }}"
     ansible_collection_requirements: "{{ repo.1.ansible_collection_requirements | default(omit) }}"
-  register: repo
+  register: repo_item
 
 - set_fact:
-    run: "{{ repo_list + [temp] }}"
+    repo_list: "{{ repo_list + [temp] }}"
   vars:
-    temp: "{{ repo['repositories']['name'] }}"  
-  when: repo['repositories']['content_counts']['file'] == 0
+    temp: "{{ repo_item['entity']['repositories'][0]['name'] }}"  
+  when: repo_item['entity']['repositories'][0]['content_counts']['file'] == 0

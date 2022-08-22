@@ -1,8 +1,13 @@
+- include_tasks: products.yml
+
 - include_tasks: iso_repos.yml
   loop_control:
     loop_var: repo
   with_subelements:
     - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
     - repositories
-- include_tasks: validate_repos.yml
-  with_items: "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
+
+- include_role:
+    name: installer.kickstart.iso_prep
+  loop: "{{ repo_list }}"
+  when: repo_list | length > 0

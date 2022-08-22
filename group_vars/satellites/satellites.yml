@@ -91,29 +91,25 @@ foreman_products:
   - name: "Red Hat 7 ISO"
     content_type: file
     unprotected: true
-    download_policy: immediate
     verify_ssl_on_sync: true
     description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
     url:  "{{ foreman_server_url }}/pub/ISOS/RHEL7"
     arch: x86_64
-    iso_path: "{{ foreman_web_path }}/ISOS/RHEL7"
   isos:
-    iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-    web_path: "{{ foreman_web_path }}pub/ISOS/" 
+    - iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
+      web_path: "{{ foreman_web_path }}pub/ISOS/" 
 - name: "Red Hat ISO Content"
   repositories:
   - name: "Red Hat 8 ISO"
     content_type: file
     unprotected: true
     verify_ssl_on_sync: true
-    download_policy: immediate
     description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
-    iso_path: "{{ foreman_web_path }}/ISOS/RHEL8"
     url: "{{ foreman_server_url }}/pub/ISOS/RHEL8"
     arch: x86_64
-    isos:
-      iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-      web_path: "{{ foreman_web_path }}pub/ISOS/"
+  isos:
+    - iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
+      web_path: "{{ foreman_web_path }}pub/ISOS/RHEL7"
 - name: kickstart
   all_repositories: true
   labels:
