@@ -55,7 +55,7 @@
   register: repo
 
 - set_fact:
-    run: |
-    {% if repo['repositories']['content_counts']['file'] == 0 %}
-    {{ repo_list.append(repo['repositories']['name']) }}
-    {% endif %} 
+    run: "{{ repo_list + [temp] }}"
+  vars:
+    temp: "{{ repo['repositories']['name'] }}"  
+  when: repo['repositories']['content_counts']['file'] == 0
