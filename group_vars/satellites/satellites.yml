@@ -91,6 +91,7 @@ foreman_products:
   - name: "Red Hat 7 ISO"
     content_type: file
     unprotected: true
+    download_policy: immediate
     verify_ssl_on_sync: true
     description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
     url:  "{{ foreman_server_url }}/pub/ISOS/RHEL7"
@@ -105,6 +106,7 @@ foreman_products:
     content_type: file
     unprotected: true
     verify_ssl_on_sync: true
+    download_policy: immediate
     description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
     iso_path: "{{ foreman_web_path }}/ISOS/RHEL8"
     url: "{{ foreman_server_url }}/pub/ISOS/RHEL8"

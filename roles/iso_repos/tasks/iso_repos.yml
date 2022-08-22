@@ -1,0 +1,61 @@
+- name: 'Create Products'
+  theforeman.foreman.product:
+    username: "{{ foreman_username | default(omit) }}"
+    password: "{{ foreman_password | default(omit) }}"
+    server_url: "{{ foreman_server_url | default(omit) }}"
+    validate_certs: "{{ foreman_validate_certs | default(omit) }}"
+    organization: "{{ foreman_organization }}"
+    name: "{{ item.name }}"
+    label: "{{ item.label | default(omit) }}"
+    gpg_key: "{{ item.gpg_key | default(omit) }}"
+    state: present
+  with_items:
+    - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
+
+- name: 'Create Repositories'
+  theforeman.foreman.repository:
+    username: "{{ foreman_username | default(omit) }}"
+    password: "{{ foreman_password | default(omit) }}"
+    server_url: "{{ foreman_server_url | default(omit) }}"
+    validate_certs: "{{ foreman_validate_certs | default(omit) }}"
+    organization: "{{ foreman_organization }}"
+    name: "{{ repo.1.name }}"
+    url: "{{ repo.1.url | default(omit) }}"
+    product: "{{ repo.0.name }}"
+    arch: "{{ repo.1.arch | default(omit) }}"
+    auto_enabled: "{{ repo.1.auto_enabled | default(omit) }}"
+    checksum_type: "{{ repo.1.checksum_type | default(omit) }}"
+    content_type: "{{ repo.1.content_type }}"
+    deb_architectures: "{{ repo.1.deb_architectures | default(omit) }}"
+    deb_components: "{{ repo.1.deb_components | default(omit) }}"
+    deb_errata_url: "{{ repo.1.deb_errata_url | default(omit) }}"
+    deb_releases: "{{ repo.1.deb_releases | default(omit) }}"
+    description: "{{ repo.1.description | default(omit) }}"
+    docker_tags_whitelist: "{{ repo.1.docker_tags_whitelist | default(omit) }}"
+    docker_upstream_name: "{{ repo.1.docker_upstream_name | default(omit) }}"
+    download_policy: "{{ repo.1.download_policy | default(omit) }}"
+    gpg_key: "{{ repo.1.gpg_key | default(omit) }}"
+    http_proxy: "{{ repo.1.http_proxy | default(omit) }}"
+    http_proxy_policy: "{{ repo.1.http_proxy_policy | default(omit) }}"
+    ignorable_content: "{{ repo.1.ignorable_content | default(omit) }}"
+    ignore_global_proxy: "{{ repo.1.ignore_global_proxy | default(omit) }}"
+    label: "{{ repo.1.label | default(omit) }}"
+    mirror_on_sync: "{{ repo.1.mirror_on_sync | default(omit) }}"
+    mirroring_policy: "{{ repo.1.mirroring_policy | default(omit) }}"
+    os_versions: "{{ repo.1.os_versions | default(omit) }}"
+    ssl_ca_cert: "{{ repo.1.ssl_ca_cert | default(omit) }}"
+    ssl_client_cert: "{{ repo.1.ssl_client_cert | default(omit) }}"
+    ssl_client_key: "{{ repo.1.ssl_client_key | default(omit) }}"
+    state: present
+    unprotected: "{{ repo.1.unprotected | default(omit) }}"
+    upstream_password: "{{ repo.1.upstream_password | default(omit) }}"
+    upstream_username: "{{ repo.1.upstream_username | default(omit) }}"
+    verify_ssl_on_sync: "{{ repo.1.verify_ssl_on_sync | default(omit) }}"
+    ansible_collection_requirements: "{{ repo.1.ansible_collection_requirements | default(omit) }}"
+  register: repo
+
+- set_fact:
+    run: |
+    {% if repo['repositories']['content_counts']['file'] == 0 %}
+    {{ repo_list.append(repo['repositories']['name']) }}
+    {% endif %} 
