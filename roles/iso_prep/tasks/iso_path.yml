@@ -1,39 +1,40 @@
-- name: "create the web path: {{ item['web_path'] }}"
+
+- name: "create the web path: {{ item[0]['web_path'] }}"
   file:
-    path: "{{ item['web_path'] }}"
+    path: "{{ item[0]['web_path'] }}"
     recurse: true
     state: directory
 
-- name: "verify  {{ item['iso_path'] }}"
+- name: "verify  {{ item[0]['iso_path'] }}"
   block:
   - stat: 
-      path: "{{ item['iso_path'] }}"
+      path: "{{ item[0]['iso_path'] }}"
     register: iso_type
     ignore_errors: true
 
   - set_fact:
       test: "application/x-iso9660-image"
-      type: "{{ iso_test['stat']['mimetype'] | default(omit) }}"
+      type: "{{ iso_type['stat']['mimetype'] | default(omit) }}"
 
   - assert:
       that:
       - type == test
       msg:
       - "!!! READ ME !!!"
-      - "validate that {{ item['iso_path'] }} exists and that it is an iso."
+      - "validate that {{ item[0]['iso_path'] }} exists and that it is an iso."
     when: type is defined
 
   - fail:
       msg:
       - "!!! READ ME !!!"
-      - "validate that {{ item['iso_path'] }} exists and that it is an iso."
+      - "validate that {{ item[0]['iso_path'] }} exists and that it is an iso."
     when: type is not defined
-  when: bob | bool
+  when: no_val | bool
 
-- name: copy {{ item['iso_path'] }} to {{ item['web_path']
+- name: copy {{ item[0]['iso_path'] }} to {{ item[0]['web_path'] }}
   copy:
     remote_src: true
-    src:  "{{ item['iso_path'] }}"
-    dest: "{{ item['web_path'] }}"
+    src:  "{{ item[0]['iso_path'] }}"
+    dest: "{{ item[0]['web_path'] }}"
     owner: apache
     group: apache
