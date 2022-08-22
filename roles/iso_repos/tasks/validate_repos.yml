@@ -1,16 +1,14 @@
-- name: run repo role
-  include_role:
-    name: repositories
-
 - name: validate repo
   theforeman.foreman.repository_info:
     username: "{{ foreman_username }}"
     password: "{{ foreman_password }}"
     server_url: "{{ foreman_server_url }}"
-    name: "{{ temp['name'] }}"
+    name: "{{ product_name }}"
     product: "{{ item['name'] }}"
     organization: "{{ foreman_organization }}"
   loop: "{{ item['repositories'] }}"
+  vars:
+    product_name: "{{ item['name'] }}"
   register: temp
   loop_control:
     loop_var: temp
