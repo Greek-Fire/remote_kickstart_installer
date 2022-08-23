@@ -41,7 +41,14 @@
   register: repo_item
 
 - set_fact:
+    repo_data: "{{ repo_data + [data] }}"
+  vars:
+    data: 
+      name: "{{ repo_item['entity']['repositories'][0]['name'] }}"
+      path: "{{ repo_item['entity']['repositories'][0]['full_path'] }}"
+
+- set_fact:
     repo_list: "{{ repo_list + [temp] }}"
   vars:
-    temp: "{{ repo_item['entity']['repositories'][0]['name'] }}"  
+    temp: "{{ repo_item['entity']['repositories'][0]['name'] }}" 
   when: repo_item['entity']['repositories'][0]['content_counts']['file'] == 0

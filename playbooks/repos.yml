@@ -5,4 +5,4 @@
   - installer.kickstart
   tasks:
   - include_role:
-      name: repositories 
+      name: repositories

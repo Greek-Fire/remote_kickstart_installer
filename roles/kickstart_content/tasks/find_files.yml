@@ -1,0 +1,17 @@
+- name: find all required directories
+  find:
+    paths: "{{ item[1]['mount_path'] }}"
+    recurse: no
+    file_type: directory
+  register: dir
+  
+- name: find all required files
+  find:
+    paths: "{{ item[1]['mount_path'] }}"
+    recurse: no
+    file_type: file
+  register: files
+  
+- set_fact:
+    files: "{{ files['files'] | map(attribute='path') }}"
+    dir:   "{{ dir['files'] | map(attribute='path') }}"
