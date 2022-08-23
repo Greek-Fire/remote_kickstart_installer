@@ -1,0 +1,21 @@
+- stat: 
+    path: "{{ item['iso_path'] }}"
+  register: iso_type
+  ignore_errors: true
+
+- set_fact:
+    type: "{{ iso_test['stat']['mimetype'] | default(omit) }}"
+     
+- assert:
+    that:
+    - type == test
+    msg:
+    - "!!! READ ME !!!"
+    - "validate that {{ item[1]['iso_path'] }} exists and that it is an iso."
+  when: type is defined
+
+- fail:
+    msg:
+    - "!!! READ ME !!!"
+    - "validate that {{ item[1]['iso_path'] }} exists and that it is an iso."
+  when: type is not defined

@@ -1,0 +1,55 @@
+- set_fact:
+    os_major: "{{ item[1]['os_major'] }}"
+    os_minor: "{{ item[1]['os_minor'] }}"
+
+- name: rhel 7 content
+  block:
+  - set_fact:
+      data_content_path: "{{ import_path }}/content/dist/rhel/server/{{ os_major }}/{{ os_major }}.{{ os_minor }}/x86_64/kickstart"
+
+  - name: "create iso content import path"
+    file: 
+      path: "{{ data_content_path }}"
+      recurse: true
+      state: dirctory
+      owner: foreman-proxy
+      group: foreman-proxy
+    vars:
+      path: "{{ import_path }}/content/dist/rhel/server/{{ os_major }}/{{ os_major }}.{{ os_minor }}/x86_64/kickstart"
+  when: os_major == 7
+
+- name: rhel 8 content
+  block:
+  - set_fact:
+      data_content_path: "{{ import_path }}/content/dist/rhel{{ os_major }}/{{ os_major }}.{{ os_minor }}/x86_64/{{ item8 }}/kickstart"
+
+   - name: ""create iso content import path"
+     file:
+       path: "{{ data_content_path }}/{{ item8 }}"
+       recurse: true
+       owner: foreman-proxy
+       group: foreman-proxy
+       state: dirctory
+     loop:
+     - appstream
+     - baseos
+     loop_control:
+       loop_var: item8
+
+   - name: add tree file to appstream
+     template:
+       src: AppStream.j2
+       dest: "{{ data_content_path }}"
+       owner: foreman-proxy
+       group: foreman-proxy
+       mode: 0644
+
+   - name: add tree file to baseos
+     template:
+       src: AppStream.j2
+       dest: "{{ data_content_path }}"
+       owner: foreman-proxy
+       group: foreman-proxy
+       mode: 0644
+    
+  when: os_major == 8

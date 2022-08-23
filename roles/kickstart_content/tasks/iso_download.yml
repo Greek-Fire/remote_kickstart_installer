@@ -1,0 +1,42 @@
+- name: file check {{ item[1]['download_path'] }}
+  file:
+    path: "{{ item[1]['download_path']"
+    state: directory
+    recurse: true
+  
+- name: grab iso file
+  uri:
+    url: "{{ path }}{{ iso }}"
+    username: "{{ foreman_username }}"
+    passowrd: "{{ forman_password }}"
+    force_basic_auth: true
+    dest: "{{ item[1]['download_path'] }}"
+  vars:
+    path: "{{ repo_data | selectattr("name", "equalto", "item[0]['name']") | map(attribute='path') | first }}"
+    iso:  "{{ item[1]['iso_path'] | split('\') | last }}"
+
+- name: "mounting {{ item[1]['iso_path'] }} to {{ item[1]['mount_path'] }}"
+  mount:
+    path:   "{{ item[1]['mount_path'] }}"
+    src:    "{{ item[1]['iso_path'] }}"
+    fstype: "iso9660"
+    opts:   "ro,noauto"
+    state:  "mounted"
+
+- include_tasks: assert.yml
+
+- include_tasks: find_files.yml
+
+- name: "copy from iso mount to content repo***"
+  copy:
+    remote_src: true
+    src:  "{{ temp }}"
+    dest: "{{ data_content_path }}"
+    owner: foreman-proxy
+    group: foreman-proxy
+  loop_control:
+    loop_var: temp
+  with_items:
+  - "{{ files }}"
+  - "{{ dir }}"
+  when: item[1]['os_major'] == 7
