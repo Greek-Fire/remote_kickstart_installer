@@ -1,0 +1,5 @@
+repo_data:
+- name: Red Hat 7 ISO
+  path: https://sat.example.net/pulp/content/hallas/Library/custom/Red_Hat_ISO_Content/Red_Hat_7_ISO/
+- name: Red Hat 8 ISO
+  path: https://sat.example.net/pulp/content/hallas/Library/custom/Red_Hat_ISO_Content/Red_Hat_8_ISO/

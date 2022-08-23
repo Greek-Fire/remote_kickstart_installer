@@ -1,0 +1,4 @@
+- include_tasks: iso_download.yml
+  with_subelements:
+  - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
+  - repositories
