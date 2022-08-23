@@ -10,7 +10,6 @@
 - include_role:
     name: installer.kickstart.iso_prep
   loop: "{{ repo_list }}"
-  when: repo_list | length > 0
 
 - include_tasks: iso_sync.yml
   loop_control:

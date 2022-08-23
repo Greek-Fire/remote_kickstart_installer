@@ -9,6 +9,7 @@
   block:
   - stat: 
       path: "{{ item[0]['iso_path'] }}"
+      checksum: sha256
     register: iso_type
     ignore_errors: true
 
@@ -29,8 +30,23 @@
       - "!!! READ ME !!!"
       - "validate that {{ item[0]['iso_path'] }} exists and that it is an iso."
     when: type is not defined
-  when: iso_val | bool
 
+- set_fact:
+    line: "{{ last }},{{ checksum }},{{ size }}"
+  vars:
+    last: "{{ iso_type['stat']['path'] | split('/') | last }}"
+    size: "{{ iso_type['stat']['size'] }}"
+    checksum: "{{ iso_type['stat']['checksum'] }}"
+
+- name: create {{ item[0]['web_path'] }}/PULP_MANIFEST file
+  lineinfile:
+    path: "{{ item[0]['web_path'] }}/PULP_MANIFEST"
+    line: "{{ line }}"
+    owner: apache
+    group: apache
+    create: true
+    state: present
+     
 - name: copy {{ item[0]['iso_path'] }} to {{ item[0]['web_path'] }}
   copy:
     remote_src: true

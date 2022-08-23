@@ -5,7 +5,8 @@ foreman_architecture:
 - name: x86_64
 
 sat_fqdn: sat.example.net
-foreman_web_path: "/var/www/html/pub/"
+foreman_web_path: "/var/www/html/pub"
+import_path:  "/var/www/html/pub/sat-import"
 
 foreman_subnets:
  - name: "192.168.1.0"
@@ -90,8 +91,12 @@ foreman_products:
     url:  "{{ foreman_server_url }}/pub/ISOS/RHEL7"
     arch: x86_64
   isos:
-    - iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-      web_path: "{{ foreman_web_path }}/ISOS/" 
+    - iso_path:   "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
+      web_path:   "{{ foreman_web_path }}/ISOS/RHEL7"
+      mount_path: "/mnt/isos/RHEL7"
+      os_major: 7
+      os_minor: 9
+      os_flavor: RHEL     
 - name: "Red Hat ISO Content"
   repositories:
   - name: "Red Hat 8 ISO"
@@ -102,8 +107,12 @@ foreman_products:
     url: "{{ foreman_server_url }}/pub/ISOS/RHEL8"
     arch: x86_64
   isos:
-    - iso_path: "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
-      web_path: "{{ foreman_web_path }}/ISOS/RHEL7"
+    - iso_path:   "/mnt/cloud_isos/rhel-8.6-x86_64-dvd.iso"
+      web_path:   "{{ foreman_web_path }}/ISOS/RHEL8"
+      mount_path: "/mnt/isos/RHEL8"
+      os_major: 8
+      os_minor: 6
+      os_flavor: RHEL
 - name: kickstart
   all_repositories: true
   labels:
