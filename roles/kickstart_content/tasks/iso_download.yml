@@ -1,29 +1,36 @@
-- name: file check {{ item[1]['download_path'] }}
+- set_fact:
+    temp_repo_name:     "{{ item[1]['name'] }}"
+    temp_iso_path:      "{{ item[1]['isos']['iso_path'] }}"
+    temp_download_path: "{{ item[1]['isos']['download_path'] }}"
+
+- name: "file check {{ download_path }}"
   file:
-    path: "{{ item[1]['download_path']"
+    path: "{{ temp_download_path }}"
     state: directory
     recurse: true
-  
+
 - name: grab iso file
   uri:
-    url: "{{ path }}{{ iso }}"
-    username: "{{ foreman_username }}"
-    passowrd: "{{ forman_password }}"
+    url: "{{ temp_path }}{{ iso }}"
+    user: "{{ foreman_username }}"
+    password: "{{ foreman_password }}"
     force_basic_auth: true
-    dest: "{{ item[1]['download_path'] }}"
+    dest: "{{ temp_download_path }}"
   vars:
-    path: "{{ repo_data | selectattr("name", "equalto", "item[0]['name']") | map(attribute='path') | first }}"
-    iso:  "{{ item[1]['iso_path'] | split('\') | last }}"
+    iso:  "{{ temp_iso_path | split('/') | last }}"
+    temp_path: "{{ repo_data | selectattr('name', 'equalto', temp_repo_name) | map(attribute='path') | first }}"
 
-- name: "mounting {{ item[1]['iso_path'] }} to {{ item[1]['mount_path'] }}"
+- name: "mounting {{ temp_iso_path }} to {{ temp_mount_path }}"
   mount:
-    path:   "{{ item[1]['mount_path'] }}"
-    src:    "{{ item[1]['iso_path'] }}"
+    path:   "{{ temp_mount_path }}"
+    src:    "{{ temp_iso_path }}"
     fstype: "iso9660"
     opts:   "ro,noauto"
     state:  "mounted"
 
 - include_tasks: assert.yml
+
+- include_tasks: file_path.yml
 
 - include_tasks: find_files.yml
 
