@@ -1,13 +1,13 @@
 - name: find all required directories
   find:
-    paths: "{{ item[1]['mount_path'] }}"
+    paths: "{{ temp_mount_path }}"
     recurse: no
     file_type: directory
   register: dir
   
 - name: find all required files
   find:
-    paths: "{{ item[1]['mount_path'] }}"
+    paths: "{{ temp_mount_path }}"
     recurse: no
     file_type: file
   register: files

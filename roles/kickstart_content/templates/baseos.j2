@@ -9,14 +9,14 @@ images/pxeboot/vmlinuz = sha256:aab313061ddbd514a18529cc3428718deafe1121791d1d9a
 ; WARNING.1 = Read productmd documentation for details about new format.
 arch = x86_64
 family = Red Hat Enterprise Linux
-name = Red Hat Enterprise Linux {{ os_major }}.{{ os_minor }}
+name = Red Hat Enterprise Linux {{ temp_os_major }}.{{ temp_os_minor }}
 packagedir = AppStream/Packages
 platforms = x86_64,xen
 repository = .
 timestamp = 1650472688
 variant = BaseOS
 variants = BaseOS
-version = {{ os_major }}.{{ os_minor }}
+version = {{ temp_os_major }}.{{ temp_os_minor }}
 
 [header]
 type = productmd.treeinfo
@@ -38,7 +38,7 @@ totaldiscs = 1
 [release]
 name = Red Hat Enterprise Linux
 short = RHEL
-version = {{ os_major }}.{{ os_minor }}
+version = {{ temp_os_major }}.{{ temp_os_minor }}
 
 [stage2]
 mainimage = images/install.img

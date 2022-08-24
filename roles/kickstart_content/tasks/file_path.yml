@@ -1,55 +1,37 @@
-- set_fact:
-    os_major: "{{ item[1]['os_major'] }}"
-    os_minor: "{{ item[1]['os_minor'] }}"
-
 - name: rhel 7 content
   block:
-  - set_fact:
-      data_content_path: "{{ import_path }}/content/dist/rhel/server/{{ os_major }}/{{ os_major }}.{{ os_minor }}/x86_64/kickstart"
 
   - name: "create iso content import path"
     file: 
       path: "{{ data_content_path }}"
       recurse: true
-      state: dirctory
+      state: directory
       owner: foreman-proxy
       group: foreman-proxy
     vars:
-      path: "{{ import_path }}/content/dist/rhel/server/{{ os_major }}/{{ os_major }}.{{ os_minor }}/x86_64/kickstart"
-  when: os_major == 7
+      path: "{{ import_path }}/content/dist/rhel/server/{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/kickstart"
+
+  - name: "copy from iso mount to content repo***"
+    copy:
+      remote_src: true
+      src:  "{{ temp }}"
+      dest: "{{ data_content_path }}"
+      owner: foreman-proxy
+      group: foreman-proxy
+    loop_control:
+      loop_var: temp
+    with_items:
+    - "{{ files }}"
+    - "{{ dir }}"
+  when: (temp_os_major == '7')
+  vars:
+      data_content_path: "{{ import_path }}/content/dist/rhel/server/{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/kickstart"
 
 - name: rhel 8 content
-  block:
-  - set_fact:
-      data_content_path: "{{ import_path }}/content/dist/rhel{{ os_major }}/{{ os_major }}.{{ os_minor }}/x86_64/{{ item8 }}/kickstart"
-
-   - name: ""create iso content import path"
-     file:
-       path: "{{ data_content_path }}/{{ item8 }}"
-       recurse: true
-       owner: foreman-proxy
-       group: foreman-proxy
-       state: dirctory
-     loop:
-     - appstream
-     - baseos
-     loop_control:
-       loop_var: item8
-
-   - name: add tree file to appstream
-     template:
-       src: AppStream.j2
-       dest: "{{ data_content_path }}"
-       owner: foreman-proxy
-       group: foreman-proxy
-       mode: 0644
-
-   - name: add tree file to baseos
-     template:
-       src: AppStream.j2
-       dest: "{{ data_content_path }}"
-       owner: foreman-proxy
-       group: foreman-proxy
-       mode: 0644
-    
-  when: os_major == 8
+  include_tasks: rhel8_treeinfo.yml
+  loop:
+  - appstream
+  - baseos
+  loop_control:
+    loop_var: item8  
+  when: (temp_os_major == '8')

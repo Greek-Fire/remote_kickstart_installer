@@ -1,21 +1,22 @@
 - stat: 
-    path: "{{ item['iso_path'] }}"
-  register: iso_type
+    path: "{{ temp_iso_download }}"
+  register: iso_test
   ignore_errors: true
 
 - set_fact:
     type: "{{ iso_test['stat']['mimetype'] | default(omit) }}"
+    iso_test: "application/x-iso9660-image"
      
 - assert:
     that:
-    - type == test
+    - type == iso_test
     msg:
     - "!!! READ ME !!!"
-    - "validate that {{ item[1]['iso_path'] }} exists and that it is an iso."
+    - "validate that {{ temp_download_path }} exists and that it is an iso."
   when: type is defined
 
 - fail:
     msg:
     - "!!! READ ME !!!"
-    - "validate that {{ item[1]['iso_path'] }} exists and that it is an iso."
+    - "validate that {{ temp_download_path }} exists and that it is an iso."
   when: type is not defined

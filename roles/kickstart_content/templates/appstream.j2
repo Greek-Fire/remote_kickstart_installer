@@ -3,14 +3,14 @@
 ; WARNING.1 = Read productmd documentation for details about new format.
 arch = x86_64
 family = Red Hat Enterprise Linux
-name = Red Hat Enterprise Linux {{ os_major }}.{{ os_minor }}
+name = Red Hat Enterprise Linux {{ temp_os_major }}.{{ temp_os_minor }}
 packagedir = Packages
 platforms = x86_64
 repository = .
 timestamp = 1571146127
 variant = AppStream
 variants = AppStream
-version = {{ os_major }}.{{ os_minor }}
+version = {{ temp_os_major }}.{{ temp_os_minor }}
 
 [header]
 type = productmd.treeinfo
@@ -19,7 +19,7 @@ version = 1.2
 [release]
 name = Red Hat Enterprise Linux
 short = RHEL
-version = {{ os_major }}.{{ os_minor }}
+version = {{ temp_os_major }}.{{ temp_os_minor }}
 
 [tree]
 arch = x86_64
