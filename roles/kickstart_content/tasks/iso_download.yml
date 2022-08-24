@@ -37,6 +37,7 @@
     state:  "mounted"
 
 - include_tasks: assert.yml
+  when: skip | bool
 
 - include_tasks: find_files.yml
 

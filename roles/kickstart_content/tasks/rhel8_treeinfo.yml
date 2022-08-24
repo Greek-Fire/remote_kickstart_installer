@@ -4,26 +4,18 @@
 
 - name: "create iso content import path"
   file:
-     path: "{{ data_content_path }}/{{ item8 }}"
+     path: "{{ data_content_path }}"
      recurse: true
      owner: foreman-proxy
      group: foreman-proxy
      state: directory
 
-- name: add tree file to {{ item8 }}
-  template:
-    src: "{{ item8 }}.j2"
-    dest: "{{ data_content_path }}/treeinfo"
-    owner: foreman-proxy
-    group: foreman-proxy
-    mode: 0644
-
 - name: copy {{ item8 }} to {{ data_content_path }}
   copy:
-    src:  "{{ temp_mount_path }}/AppStream"
+    src:  "{{ temp_mount_path }}/AppStream/"
     dest: "{{ data_content_path }}"
-    owner: apache
-    group: apache
+    owner: foreman-proxy
+    group: foreman-proxy
     remote_src: true
   when: (item8 == 'appstream')
 
@@ -38,8 +30,8 @@
     copy:
       src:  "{{ temp_item }}"
       dest: "{{ data_content_path }}"
-      owner: apache
-      group: apache
+      owner: foreman-proxy
+      group: foreman-proxy
       remote_src: true
     loop: "{{ baseos }}"
     loop_control:
@@ -49,10 +41,18 @@
     copy:
       src:  "{{ temp_item }}"
       dest: "{{ data_content_path }}"
-      owner: apache
-      group: apache
+      owner: foreman-proxy
+      group: foreman-proxy
       remote_src: true
     loop: "{{ files }}"
     loop_control:
       loop_var: temp_item
   when: (item8 == 'baseos')
+
+- name: add tree file to {{ item8 }}
+  template:
+    src: "{{ item8 }}.j2"
+    dest: "{{ data_content_path }}/treeinfo"
+    owner: foreman-proxy
+    group: foreman-proxy
+    mode: 0644
