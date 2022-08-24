@@ -1,6 +1,27 @@
 - set_fact:
     data_content_path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/{{ item8 }}/kickstart"
- 
+    data_content_list: ["{{ two }}","{{ thr }}","{{ fou }}"]
+  vars:
+      two: 
+        path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/appstream"
+        content: "kickstart"
+      thr: 
+        path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/baseos"
+        content: "kickstart"
+      fou: 
+        path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}"
+        content: "{{ temp_os_major }}.{{ temp_os_minor }}"
+
+- name: create listing file
+  lineinfile:
+    path: "{{ temp['path'] }}/listing"
+    create: true
+    line: "{{ temp['content'] }}"
+    owner: foreman-proxy
+    group: foreman-proxy
+  loop_control:
+    loop_var: temp
+  loop: "{{ data_content_list }}"
 
 - name: "create iso content import path"
   file:

@@ -5,8 +5,7 @@
       data_content_path: "{{ one }}"
       data_content_list: ["{{ two }}","{{ thr }}","{{ fou }}"]
     vars:
-      one: 
-        path: "{{ import_path }}/content/dist/rhel/server/{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/kickstart"
+      one: "{{ import_path }}/content/dist/rhel/server/{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/kickstart"
       two: 
         path: "{{ import_path }}/content/dist/rhel/server/{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64"
         content: "kickstart"
@@ -30,7 +29,7 @@
       path: "{{ temp['path'] }}/listing"
       create: true
       #line: "{{ (temp['content'] | type_debug != 'List') | ternary(temp['content'], temp['content'] | join(',') ) }}"
-      line: "{{ (temp['content'] }}"
+      line: "{{ temp['content'] }}"
       owner: foreman-proxy
       group: foreman-proxy
     loop_control:

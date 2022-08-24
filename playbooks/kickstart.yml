@@ -4,5 +4,10 @@
   - theforeman.foreman
   - installer.kickstart
   tasks:
+
+  - include_role:
+      name: iso_repos
+  - include_role:
+      name: repositories 
   - include_role:
       name: kickstart_content 
