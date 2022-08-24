@@ -45,7 +45,15 @@
   - set_fact:
       baseos: "{{ dir | difference(temp) }}"
     vars:
-      temp: ["{{ temp_mount_path }}/AppStream","{{ temp_mount_path }}/BaseOS"]  
+      temp: ["{{ temp_mount_path }}/AppStream","{{ temp_mount_path }}/BaseOS"]
+
+  - name: copy {{ item8 }} to {{ data_content_path }}
+    copy:
+      src:  "{{ temp_mount_path }}/BaseOS/"
+      dest: "{{ data_content_path }}"
+      owner: foreman-proxy
+      group: foreman-proxy
+      remote_src: true
 
   - name: copy dirs to baseos
     copy:

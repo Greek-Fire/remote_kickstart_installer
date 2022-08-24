@@ -15,6 +15,8 @@
     path: "{{ temp_download_path }}"
     state: directory
     recurse: true
+    owner: foreman-proxy
+    group: foreman-proxy
 
 - name: grab iso file
   get_url:

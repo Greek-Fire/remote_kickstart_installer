@@ -120,3 +120,4 @@ foreman_products:
   labels:
   - rhel-8-for-x86_64-appstream-kickstart 
   - rhel-8-for-x86_64-baseos-kickstart
+  - rhel-7-server-kickstart
