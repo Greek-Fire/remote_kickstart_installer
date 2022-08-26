@@ -1,7 +1,10 @@
 - set_fact:
     data_content_path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/{{ item8 }}/kickstart"
-    data_content_list: ["{{ two }}","{{ thr }}","{{ fou }}"]
+    data_content_list: ["{{ one }}","{{ two }}","{{ thr }}","{{ fou }}","{{ fiv }}"]
   vars:
+      one:
+        path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}"
+        content: "x86_64"
       two: 
         path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64/appstream"
         content: "kickstart"
@@ -11,17 +14,22 @@
       fou: 
         path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}"
         content: "{{ temp_os_major }}.{{ temp_os_minor }}"
+      fiv:
+        path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64"
+        content: ['appstream','baseos']
 
 - name: create listing file
-  lineinfile:
-    path: "{{ temp['path'] }}/listing"
-    create: true
-    line: "{{ temp['content'] }}"
+  template:
+    src: content.j2
+    dest: "{{ temp['path'] }}/listing"
+    mode: 0644
     owner: foreman-proxy
     group: foreman-proxy
   loop_control:
     loop_var: temp
   loop: "{{ data_content_list }}"
+  vars:
+    content: "{{ (temp['content'] | length == 2) | ternary(temp['content'] | join('\n'),temp['content']) }}"
 
 - name: "create iso content import path"
   file:

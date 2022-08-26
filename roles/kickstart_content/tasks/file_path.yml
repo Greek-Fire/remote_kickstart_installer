@@ -25,16 +25,17 @@
       group: foreman-proxy
 
   - name: create listing file
-    lineinfile:
-      path: "{{ temp['path'] }}/listing"
-      create: true
-      #line: "{{ (temp['content'] | type_debug != 'List') | ternary(temp['content'], temp['content'] | join(',') ) }}"
-      line: "{{ temp['content'] }}"
+    template: 
+      dest: "{{ temp['path'] }}/listing"
+      src: content.j2
+      mode: 0644
       owner: foreman-proxy
       group: foreman-proxy
     loop_control:
       loop_var: temp
     loop: "{{ data_content_list }}"
+    vars:
+      content: "{{ temp['content'] }}"
 
   - name: "copy from iso mount to content repo***"
     copy:
