@@ -18,6 +18,14 @@
         path: "{{ import_path }}/content/dist/rhel{{ temp_os_major }}/{{ temp_os_major }}.{{ temp_os_minor }}/x86_64"
         content: ['appstream','baseos']
 
+- name: "create iso content import path"
+  file:
+     path: "{{ data_content_path }}"
+     recurse: true
+     owner: foreman-proxy
+     group: foreman-proxy
+     state: directory
+
 - name: create listing file
   template:
     src: content.j2
@@ -30,14 +38,6 @@
   loop: "{{ data_content_list }}"
   vars:
     content: "{{ (temp['content'] | length == 2) | ternary(temp['content'] | join('\n'),temp['content']) }}"
-
-- name: "create iso content import path"
-  file:
-     path: "{{ data_content_path }}"
-     recurse: true
-     owner: foreman-proxy
-     group: foreman-proxy
-     state: directory
 
 - name: copy {{ item8 }} to {{ data_content_path }}
   copy:
