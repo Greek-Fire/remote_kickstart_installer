@@ -9,5 +9,6 @@
     label: "{{ item.label | default(omit) }}"
     gpg_key: "{{ item.gpg_key | default(omit) }}"
     state: present
+  when: item['name'] not in product_nogo 
   with_items:
-    - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
+  - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"

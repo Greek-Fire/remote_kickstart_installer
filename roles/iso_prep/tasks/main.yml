@@ -2,6 +2,6 @@
 # tasks file for mount
 
 - include_tasks: iso_path.yml     
-  loop: "{{ _list | map(attribute='repositories') | flatten | selectattr('name','==', item) | selectattr('isos','defined') | map(attribute='isos') | list }}"
+  loop: "{{ __list | map(attribute='repositories') | flatten | selectattr('name','==', item) | selectattr('isos','defined') | map(attribute='isos') | list }}"
   vars:
-    _list: "{{ _list | difference([foreman_products | last]) }}"
+    __list: "{{ _list | difference([foreman_products | last]) }}"

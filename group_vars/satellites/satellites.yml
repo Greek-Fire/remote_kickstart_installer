@@ -1,3 +1,4 @@
+repo_state: present
 foreman_locations:
 - name: hallas
 
@@ -7,24 +8,6 @@ foreman_architecture:
 sat_fqdn: sat.example.net
 foreman_web_path: "/var/www/html/pub"
 import_path:  "/var/www/html/pub/sat-import"
-
-foreman_subnets:
- - name: "192.168.1.0"
-   description: "Ansible created this subnet"
-   network: "192.168.1.0"
-   mask: "255.255.255.0"
-   gateway: "192.168.1.1"
-   boot_mode: "Static"
-   dns_primary: "192.168.1.2"
-   template_proxy: "sat.example.net"
-   remote_execution_proxies:
-   - "sat.example.net"
-   domains:
-   - "example.net"
-   organizations:
-   - "hallas"
-   locations:
-   - "hallas"
 
 foreman_operatingsystems:
 - name:  "RedHat"
@@ -81,6 +64,33 @@ foreman_operatingsystems:
     state: absent
   - template_kind: "user_data"
     state: absent
+- name:  "OEL"
+  major: "7"
+  minor: "9"
+  os_family: "Redhat"
+  password_hash: "SHA256"
+  architectures: "x86_64"
+  description:   "KS OEL 7.9"
+  ptables: "DISA STIG"
+  default_templates:
+  - template_kind: "provision"
+    provisioning_template: "Kickstart default"
+  - template_kind: "PXELinux"
+    provisioning_template: "Kickstart default PXELinux"
+  - template_kind: "iPXE"
+    provisioning_template: "Kickstart default iPXE"
+  - template_kind: "PXEGrub"
+    provisioning_template: "Kickstart default PXEGrub"
+  - template_kind: "PXEGrub2"
+    provisioning_template: "Kickstart default PXEGrub2"
+  - template_kind: "finish"
+    provisioning_template: "Kickstart default finish"
+  - template_kind: "host_init_config"
+    state: absent
+  - template_kind: "kexec"
+    state: absent
+  - template_kind: "user_data"
+    state: absent
 
 foreman_products:
 - name: "Red Hat ISO Content"
@@ -92,6 +102,7 @@ foreman_products:
     description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
     url:  "{{ foreman_server_url }}/pub/ISOS/RHEL7"
     arch: x86_64
+    state: "{{ repo_state }}"
     isos:
       iso_path:   "/mnt/cloud_isos/rhel-server-7.9-x86_64-dvd.iso"
       web_path:   "{{ foreman_web_path }}/ISOS/RHEL7"
@@ -104,6 +115,7 @@ foreman_products:
   repositories:
   - name: "Red Hat 8 ISO"
     content_type: file
+    state: "{{ repo_state }}"
     unprotected: true
     verify_ssl_on_sync: true
     description: "Kickstart repo managed by Ansible and used to create a kickstart tree"
@@ -122,16 +134,19 @@ foreman_products:
   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.6"
     content_type: yum
     download_policy: immediate
+    state: "{{ repo_state }}"
     mirroring_policy: additive
 - name: "Red Hat Enterprise Linux for x86_64"
   repositories:
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.6"
     content_type: yum
+    state: "{{ repo_state }}"
     download_policy: immediate
     mirroring_policy: additive
 - name: "Red Hat Enterprise Linux Server"
   repositories:
   - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9"
+    state: "{{ repo_state }}"
     content_type: yum
     download_policy: immediate
     mirroring_policy: additive
@@ -141,3 +156,50 @@ foreman_products:
   - rhel-8-for-x86_64-appstream-kickstart 
   - rhel-8-for-x86_64-baseos-kickstart
   - rhel-7-server-kickstart
+foreman_hostgroups:
+- name: 00-RHEL
+  architecture: x86_64
+  operatingsystem: Redhat
+  ptable: DISA STIG 
+  state: present
+  root_pass: "{{ secret_root }}"
+  subnet: 192.168.1.0
+  parameters:
+  - name: ust_ntp
+    value: false  
+  - name: fips_enabled
+    value: true
+  - name: package_upgrade
+    value: true
+  - name: puppet_enabled
+    value: false
+  - name: disable-firewall
+    value: true
+- name: 8
+  operatingsystem: KS RHEL 8.6
+  parent: 00-RHEL
+- name: 192.168.1.0
+  parent: 00-RHEL/8
+  subnet: 192.168.1.0 
+  domain: example.net
+- name: 00-OEL
+  architecture: x86_64
+  operatingsystem: OEL 
+  ptable: DISA STIG
+  state: present
+  root_pass: "{{ secret_root }}"
+  parameters:
+  - name: use_ntp
+    value: false
+  - name: fips_enabled
+    value: true
+  - name: package_upgrade
+    value: true
+  - name: puppet_enabled
+    value: false
+  - name: disable-firewall
+    value: true
+  - name: remote_execution_create_user
+    value: true
+  - name: packages
+    value: sssd,wget

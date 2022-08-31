@@ -5,6 +5,7 @@ foreman_organization: hallas
 foreman_location: hallas
 foreman_validate_certs: false
 foreman_server_url: "https://sat.example.net"
+secret_root: red22hat
 
 foreman_organizations:
 - name:  "{{ foreman_organization }}"
@@ -17,3 +18,21 @@ foreman_domain:
   - hallas
   organization:
   - "{{ foreman_organization }}"
+
+foreman_subnets:
+ - name: "192.168.1.0"
+   description: "Ansible created this subnet"
+   network: "192.168.1.0"
+   mask: "255.255.255.0"
+   gateway: "192.168.1.1"
+   boot_mode: "Static"
+   dns_primary: "192.168.1.2"
+   template_proxy: "sat.example.net"
+   remote_execution_proxies:
+   - "sat.example.net"
+   domains:
+   - "example.net"
+   organizations:
+   - "hallas"
+   locations:
+   - "hallas"

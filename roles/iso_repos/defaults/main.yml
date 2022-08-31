@@ -1,2 +1,9 @@
 repo_list: []
 repo_data: []
+product_nogo:
+- Red Hat Enterprise Linux for x86_64
+- Red Hat Enterprise Linux Server
+repo_nogo:
+- Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9
+- Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.6
+- Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.6

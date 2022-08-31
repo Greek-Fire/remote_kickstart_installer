@@ -3,6 +3,7 @@
 - include_tasks: iso_repos.yml
   loop_control:
     loop_var: repo
+  when: repo[1]['name'] not in repo_nogo
   with_subelements:
     - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
     - repositories
