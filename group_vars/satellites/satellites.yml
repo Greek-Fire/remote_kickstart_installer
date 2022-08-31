@@ -34,6 +34,7 @@ foreman_operatingsystems:
   password_hash: "SHA256"
   architectures: "x86_64"
   description:   "KS RHEL 8.6"
+  ptables: "DISA STIG"
   default_templates:
   - template_kind: "provision"
     provisioning_template: "Kickstart default"
@@ -55,11 +56,12 @@ foreman_operatingsystems:
     state: absent
 - name:  "RedHat"
   major: "7"
-  minor: "8"
+  minor: "9"
   os_family: "Redhat"
   password_hash: "SHA256"
   architectures: "x86_64"
-  description:   "KS RHEL 7.8"
+  description:   "KS RHEL 7.9"
+  ptables: "DISA STIG"
   default_templates:
   - template_kind: "provision"
     provisioning_template: "Kickstart default"

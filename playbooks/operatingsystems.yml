@@ -5,4 +5,6 @@
   - installer.kickstart
   tasks:
   - include_role:
+      name: partition_table
+  - include_role:
       name: operatingsystems 

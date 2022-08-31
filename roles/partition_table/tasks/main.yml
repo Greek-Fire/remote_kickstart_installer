@@ -3,11 +3,9 @@
     username: "{{ foreman_username }}"
     password: "{{ foreman_password }}"
     server_url: "{{ foreman_server_url }}"
-    file_name: "{{ item }}"
+    layout: "{{ lookup('file','disa_stig.erb') }}"
     state: present
-    locations:
-      - "{{ foreman_location }}"
-    organizations:
-      - "{{ foreman_organization }}"
-    with_fileglob:
-       - "./arsenal_templates/*.erb"
+    locations: 
+    - "{{ foreman_location }}"
+    organizations: 
+    - "{{ foreman_organization }}"

@@ -2,6 +2,7 @@ ansible_user: root
 foreman_username: admin
 foreman_password: redhat
 foreman_organization: hallas
+foreman_location: hallas
 foreman_validate_certs: false
 foreman_server_url: "https://sat.example.net"
 
