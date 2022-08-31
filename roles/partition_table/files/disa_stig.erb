@@ -1,0 +1,74 @@
+<%#
+kind: ptable
+name: DISA STIG
+model: Ptable
+oses:
+- AlmaLinux
+- CentOS
+- Fedora
+- RedHat
+- Rocky
+%>
+zerombr
+clearpart --all --initlabel
+<%
+  dev =           host_param('part_device')        || 'sda'
+  swap =          host_param('part_swap_size')     || '4096'
+  root =          host_param('part_root')          || '15'
+  home     =      host_param('part_home')          || '20'
+  roothome =      host_param('part_rhome')         || '15'
+  opt =           host_param('part_opt')           || '6000'
+  varlog =        host_param('part_var_log')       || '2000'
+  audit =         host_param('part_var_log_audit') || '2000'
+  tmp =           host_param('part_tmp')           || '2000'
+  vartmp =        host_param('part_var_tmp')       || '2000'
+  var =           host_param('part_var')           || '50'
+  fstype =        host_param('part_fstype')        || 'xfs'
+-%>
+
+<% if @host.pxe_loader.include?('UEFI') -%>
+
+  part /boot/efi --fstype="efi" --ondisk=<%= dev %> --size=200 --fsoptions="umask=0077,shortname=efi"
+  <%- if (@host.operatingsystem.family == 'Redhat' && @host.operatingsystem.major.to_i >= 7 ) -%>
+  part /boot --fstype="<%= fstype %>" --ondisk=<%= dev %> --size=1024
+  <% else -%>
+  part /boot --fstype="ext4" --ondisk=<%= dev %> --size=1024
+  <% end -%>
+  part pv.01 --fstype="lvmpv" --ondisk=<%= dev %> --size=1024 --grow
+  volgroup vgosvolume --pesize=4096 pv.01
+  
+  logvol swap           --fstype="swap"          --size=<%= swap %>    --name=swap   --vgname=vgosvolume
+  logvol /var/log       --fstype="<%= fstype %>" --size=<%= varlog %>  --name=varlog --vgname=vgosvolume
+  logvol /var/log/audit --fstype="<%= fstype %>" --size=<%= audit %>   --name=audit  --vgname=vgosvolume
+  logvol /var/tmp       --fstype="<%= fstype %>" --size=<%= vartmp %>  --name=var    --vgname=vgosvolume
+  logvol /tmp           --fstype="<%= fstype %>" --size=<%= tmp %>     --name=temp    --vgname=vgosvolume
+  logvol /opt           --fstype="<%= fstype %>" --size=<%= opt %>     --name=opt    --vgname=vgosvolume
+
+  logvol /     --fstype="<%= fstype %>" --percent=<%= root %>     --name=root     --vgname=vgosvolume
+  logvol /var  --fstype="<%= fstype %>" --percent=<%= var %>      --name=var      --vgname=vgosvolume
+  logvol /root --fstype="<%= fstype %>" --percent=<%= roothome %> --name=roothome --vgname=vgosvolume
+  logvol /home --fstype="<%= fstype %>" --percent=<%= home %>     --name=home     --vgname=vgosvolume
+
+<% elsif @host.pxe_loader.include?('BIOS') -%>
+
+  <%- if (@host.operatingsystem.family == 'Redhat' && @host.operatingsystem.major.to_i >= 7 ) -%>
+  part /boot --fstype="<%= fstype %>" --ondisk=<%= dev %> --size=1024
+  <% else -%>
+  part /boot --fstype="ext4" --ondisk=<%= dev %> --size=1024
+  <% end -%>
+  part pv.01 --fstype="lvmpv" --ondisk=<%= dev %> --size=1024 --grow
+  volgroup vgosvolume --pesize=4096 pv.01
+  
+  logvol swap           --fstype="swap"          --size=<%= swap %>    --name=swap   --vgname=vgosvolume
+  logvol /var/log       --fstype="<%= fstype %>" --size=<%= varlog %>  --name=varlog --vgname=vgosvolume
+  logvol /var/log/audit --fstype="<%= fstype %>" --size=<%= audit %>   --name=audit  --vgname=vgosvolume
+  logvol /var/tmp       --fstype="<%= fstype %>" --size=<%= vartmp %>  --name=var    --vgname=vgosvolume
+  logvol /tmp           --fstype="<%= fstype %>" --size=<%= tmp %>    --name=temp    --vgname=vgosvolume
+  logvol /opt           --fstype="<%= fstype %>" --size=<%= opt %>     --name=opt    --vgname=vgosvolume
+
+  logvol /     --fstype="<%= fstype %>" --percent=<%= root %>     --name=root     --vgname=vgosvolume
+  logvol /var  --fstype="<%= fstype %>" --percent=<%= var %>      --name=var      --vgname=vgosvolume
+  logvol /root --fstype="<%= fstype %>" --percent=<%= roothome %> --name=roothome --vgname=vgosvolume
+  logvol /home --fstype="<%= fstype %>" --percent=<%= home %>     --name=home     --vgname=vgosvolume
+
+<% end -%>

@@ -1,0 +1,13 @@
+- name: "Parsing a directory of partition templates"
+  theforeman.foreman.partition_table:
+    username: "{{ foreman_username }}"
+    password: "{{ foreman_password }}"
+    server_url: "{{ foreman_server_url }}"
+    file_name: "{{ item }}"
+    state: present
+    locations:
+      - "{{ foreman_location }}"
+    organizations:
+      - "{{ foreman_organization }}"
+    with_fileglob:
+       - "./arsenal_templates/*.erb"
