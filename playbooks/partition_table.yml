@@ -1,0 +1,8 @@
+- hosts: all
+  gather_facts: false
+  collections:
+  - theforeman.foreman
+  - installer.kickstart
+  tasks:
+  - include_role:
+      name: partition_table
