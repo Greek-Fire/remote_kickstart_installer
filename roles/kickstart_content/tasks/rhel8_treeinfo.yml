@@ -26,19 +26,6 @@
      group: foreman-proxy
      state: directory
 
-- name: create listing file
-  template:
-    src: content.j2
-    dest: "{{ temp['path'] }}/listing"
-    mode: 0644
-    owner: foreman-proxy
-    group: foreman-proxy
-  loop_control:
-    loop_var: temp
-  loop: "{{ data_content_list }}"
-  vars:
-    content: "{{ (temp['content'] | length == 2) | ternary(temp['content'] | join('\n'),temp['content']) }}"
-
 - name: copy {{ item8 }} to {{ data_content_path }}
   copy:
     src:  "{{ temp_mount_path }}/AppStream/"
@@ -84,6 +71,19 @@
     loop: "{{ files }}"
     loop_control:
       loop_var: temp_item
+
+  - name: create listing file
+    template:
+      src: content.j2
+      dest: "{{ temp['path'] }}/listing"
+      mode: 0644
+      owner: foreman-proxy
+      group: foreman-proxy
+    loop_control:
+      loop_var: temp
+    loop: "{{ data_content_list }}"
+    vars:
+      content: "{{ (temp['content'] | length == 2) | ternary(temp['content'] | join('\n'),temp['content']) }}"
   when: (item8 == 'baseos')
 
 - name: add tree file to {{ item8 }}

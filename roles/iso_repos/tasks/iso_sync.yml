@@ -6,4 +6,4 @@
     repository: "{{ sync[1]['name'] }}"
     product:    "{{ sync[0]['name'] }}"
     organization: "{{ foreman_organization }}"
-  when: item[1]['name']['isos'] is defined
+  when: sync[1]['isos'] is defined

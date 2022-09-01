@@ -1,4 +1,5 @@
 - include_tasks: iso_download.yml
+  when: item[1]['isos'] is defined 
   with_subelements:
   - "{{ foreman_products | selectattr('repositories', 'defined') | list }}"
   - repositories

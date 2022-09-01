@@ -1,9 +1,0 @@
-- hosts: localhost
-  gather_facts: false
-  tasks:
-    - uri:
-        url: https://sat.example.net/katello/api/repositories/24/upload_content
-        force_basic_auth: true
-        method: POST
-        username: admin
-        password: redhat
