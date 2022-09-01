@@ -6,7 +6,7 @@
     name: Kickstart default custom packages
     kind: snippet
     state: present
-    file_name: packages.erb
+    template: packages.erb
     locations:
       - "{{ foreman_location }}"
     organizations:
