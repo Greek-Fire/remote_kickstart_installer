@@ -1,0 +1,13 @@
+- name: "Create a Provisioning Template"
+  theforeman.foreman.provisioning_template:
+    username:   "{{ foreman_username }}"
+    password:   "{{ foreman_password }}"
+    server_url: "{{ foreman_server_url }}"
+    name: Kickstart default custom packages
+    kind: snippet
+    state: present
+    file_name: packages.erb
+    locations:
+      - "{{ foreman_location }}"
+    organizations:
+      - "{{ foreman_organization }}"
