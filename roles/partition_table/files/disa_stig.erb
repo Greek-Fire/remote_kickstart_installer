@@ -10,8 +10,7 @@ clearpart --all --initlabel
   dev =           host_param('part_device')        || 'sda'
   swap =          host_param('part_swap_size')     || '4096'
   root =          host_param('part_root')          || '15'
-  home     =      host_param('part_home')          || '20'
-  roothome =      host_param('part_rhome')         || '15'
+  home =          host_param('part_home')          || '35'
   opt =           host_param('part_opt')           || '6000'
   varlog =        host_param('part_var_log')       || '2000'
   audit =         host_param('part_var_log_audit') || '2000'
@@ -35,13 +34,12 @@ clearpart --all --initlabel
   logvol swap           --fstype="swap"          --size=<%= swap %>    --name=swap   --vgname=vgosvolume
   logvol /var/log       --fstype="<%= fstype %>" --size=<%= varlog %>  --name=varlog --vgname=vgosvolume
   logvol /var/log/audit --fstype="<%= fstype %>" --size=<%= audit %>   --name=audit  --vgname=vgosvolume
-  logvol /var/tmp       --fstype="<%= fstype %>" --size=<%= vartmp %>  --name=var    --vgname=vgosvolume
-  logvol /tmp           --fstype="<%= fstype %>" --size=<%= tmp %>     --name=temp    --vgname=vgosvolume
+  logvol /var/tmp       --fstype="<%= fstype %>" --size=<%= vartmp %>  --name=vartmp --vgname=vgosvolume
+  logvol /tmp           --fstype="<%= fstype %>" --size=<%= tmp %>     --name=temp   --vgname=vgosvolume
   logvol /opt           --fstype="<%= fstype %>" --size=<%= opt %>     --name=opt    --vgname=vgosvolume
 
   logvol /     --fstype="<%= fstype %>" --percent=<%= root %>     --name=root     --vgname=vgosvolume
   logvol /var  --fstype="<%= fstype %>" --percent=<%= var %>      --name=var      --vgname=vgosvolume
-  logvol /root --fstype="<%= fstype %>" --percent=<%= roothome %> --name=roothome --vgname=vgosvolume
   logvol /home --fstype="<%= fstype %>" --percent=<%= home %>     --name=home     --vgname=vgosvolume
 
 <% elsif @host.pxe_loader.include?('BIOS') -%>
@@ -54,16 +52,15 @@ clearpart --all --initlabel
   part pv.01 --fstype="lvmpv" --ondisk=<%= dev %> --size=1024 --grow
   volgroup vgosvolume --pesize=4096 pv.01
   
-  logvol swap           --fstype="swap"          --size=<%= swap %>    --name=swap   --vgname=vgosvolume
-  logvol /var/log       --fstype="<%= fstype %>" --size=<%= varlog %>  --name=varlog --vgname=vgosvolume
-  logvol /var/log/audit --fstype="<%= fstype %>" --size=<%= audit %>   --name=audit  --vgname=vgosvolume
-  logvol /var/tmp       --fstype="<%= fstype %>" --size=<%= vartmp %>  --name=var    --vgname=vgosvolume
-  logvol /tmp           --fstype="<%= fstype %>" --size=<%= tmp %>    --name=temp    --vgname=vgosvolume
-  logvol /opt           --fstype="<%= fstype %>" --size=<%= opt %>     --name=opt    --vgname=vgosvolume
+  logvol swap           --fstype="swap"          --size=<%= swap %>   --name=swap   --vgname=vgosvolume
+  logvol /var/log       --fstype="<%= fstype %>" --size=<%= varlog %> --name=varlog --vgname=vgosvolume
+  logvol /var/log/audit --fstype="<%= fstype %>" --size=<%= audit %>  --name=audit  --vgname=vgosvolume
+  logvol /var/tmp       --fstype="<%= fstype %>" --size=<%= vartmp %> --name=vartmp --vgname=vgosvolume
+  logvol /tmp           --fstype="<%= fstype %>" --size=<%= tmp %>    --name=temp   --vgname=vgosvolume
+  logvol /opt           --fstype="<%= fstype %>" --size=<%= opt %>    --name=opt    --vgname=vgosvolume
 
   logvol /     --fstype="<%= fstype %>" --percent=<%= root %>     --name=root     --vgname=vgosvolume
   logvol /var  --fstype="<%= fstype %>" --percent=<%= var %>      --name=var      --vgname=vgosvolume
-  logvol /root --fstype="<%= fstype %>" --percent=<%= roothome %> --name=roothome --vgname=vgosvolume
   logvol /home --fstype="<%= fstype %>" --percent=<%= home %>     --name=home     --vgname=vgosvolume
 
 <% end -%>
