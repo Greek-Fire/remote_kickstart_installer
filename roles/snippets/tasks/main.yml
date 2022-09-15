@@ -11,8 +11,8 @@
       - "{{ foreman_location }}"
     organizations:
       - "{{ foreman_organization }}"
-      loop:
-      - name:     Kickstart default custom packages
-        template: packages.erb
-      - name:     Kickstart default custom post
-        template: template_maker.erb
+  loop:
+  - name:     Kickstart default custom packages
+    template: packages.erb
+  - name:     Kickstart default custom post
+    template: template_maker.erb
