@@ -175,6 +175,10 @@ foreman_hostgroups:
     value: false
   - name: disable-firewall
     value: true
+  - name: host_registration_insights
+    value: false
+  - name: packages
+    value: sssd,wget
 - name: 8
   operatingsystem: KS RHEL 8.6
   parent: 00-RHEL
@@ -201,5 +205,7 @@ foreman_hostgroups:
     value: true
   - name: remote_execution_create_user
     value: true
+  - name: host_registration_insights
+    value: false
   - name: packages
     value: sssd,wget
