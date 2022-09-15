@@ -3,11 +3,16 @@
     username:   "{{ foreman_username }}"
     password:   "{{ foreman_password }}"
     server_url: "{{ foreman_server_url }}"
-    name: Kickstart default custom packages
+    name:     "{{ item['name'] }}"
     kind: snippet
     state: present
-    template: packages.erb
+    template: "{{ lookup('file',item['template']) }}"
     locations:
       - "{{ foreman_location }}"
     organizations:
       - "{{ foreman_organization }}"
+      loop:
+      - name:     Kickstart default custom packages
+        template: packages.erb
+      - name:     Kickstart default custom post
+        template: template_maker.erb
