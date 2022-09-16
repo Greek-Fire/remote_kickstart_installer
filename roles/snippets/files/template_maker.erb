@@ -39,6 +39,7 @@ rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release 2> /dev/null
 # Remove MAC addresses from /etc/sysconfig/network-scripts/ifcfg-*
 for FILE in /etc/sysconfig/network-scripts/ifcfg-*; do
    sed -i /^HWADDR/d "$FILE"
+   sed -i /^IPADDR/d "$FILE"
 done
 # Remove auto-generated udev rules for CD-ROM and network devices
 rm -f /etc/udev/rules.d/70-persistent-{cd,net}.rules
