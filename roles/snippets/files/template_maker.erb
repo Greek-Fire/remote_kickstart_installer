@@ -5,12 +5,15 @@ model: ProvisioningTemplate
 description: |
   Script used to scrub VM to become template
 -%>
-# Kill udev
-killall -9 udevd
+
+/sbin/service rsyslog stop
+/sbin/service auditd stop
+/bin/package-cleanup --oldkernels --count=1
 # Clean out /root
 rm -rf /root/*
 rm -f /root/.bash_history
 rm -rf /root/.ssh
+
 # SSH host keys
 rm -f /etc/ssh/ssh_host_*
 # Remove all files in /var that are not owned by an RPM
@@ -41,6 +44,7 @@ done
 rm -f /etc/udev/rules.d/70-persistent-{cd,net}.rules
 # Clean out /tmp
 find /tmp -mindepth 1 -delete
+find /var/tmp -mindepth 1 -delete
 subscription-manager remove --all
 subscription-manager unregister
 subscription-manager clean
