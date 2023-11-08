@@ -14,7 +14,8 @@ systemctl stop auditd
 yum clean all 
 
 # Remove old kernels 
-package-cleanup --oldkernels --count=1
+package-cleanup --oldkernels --count=1 
+package-cleanup --cleandupes
 
 # Clean out /root
 rm -rf /root/*
