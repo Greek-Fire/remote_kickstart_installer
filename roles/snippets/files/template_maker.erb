@@ -1,51 +1,55 @@
 <%#
 kind: snippet
-name: Kickstart default custom post
+name: Compliance Kickstart default custom post
 model: ProvisioningTemplate
 description: |
   Script used to scrub VM to become template
 -%>
 
-/sbin/service rsyslog stop
-/sbin/service auditd stop
-/bin/package-cleanup --oldkernels --count=1
+# Stop logging services
+systemctl stop rsyslog
+systemctl stop auditd
+
+# Clean up yum caches
+yum clean all 
+
+# Remove old kernels 
+package-cleanup --oldkernels --count=1
+
 # Clean out /root
 rm -rf /root/*
 rm -f /root/.bash_history
-rm -rf /root/.ssh
 
-# SSH host keys
-rm -f /etc/ssh/ssh_host_*
-# Remove all files in /var that are not owned by an RPM
-for FILE in `find /var -type f`; do
-rpm -qf --quiet "$FILE" || rm -f "$FILE"
-done
-# Remove empty directories in /var that are not owned by an RPM
-until [ "$REMOVED_DIR" = false ]; do
-     REMOVED_DIR=false
-     for DIR in `find /var -type d -empty`; do
-    if ! rpm -qf --quiet "$DIR"; then
-         REMOVED_DIR=true
-         rmdir "$DIR"
-    fi
- done
-done
-# Truncate any remaining files in /var/log
-for FILE in `find /var/log -type f`; do
-   echo -n > "$FILE"
-done
-# Make sure the RPM GPG key has been imported
-rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release 2> /dev/null
-# Remove MAC addresses from /etc/sysconfig/network-scripts/ifcfg-*
+# Truncate files in /var/log
+find /var/log -type f -exec truncate --size=0 {} \;
+
+# Remove network interface 
 for FILE in /etc/sysconfig/network-scripts/ifcfg-*; do
-   sed -i /^HWADDR/d "$FILE"
-   sed -i /^IPADDR/d "$FILE"
+    sed -i '/^HWADDR/d' "$FILE"
+    sed -i '/^UUID/d' "$FILE"
+    sed -i '/^IPADDR/d' "$FILE"
 done
-# Remove auto-generated udev rules for CD-ROM and network devices
-rm -f /etc/udev/rules.d/70-persistent-{cd,net}.rules
-# Clean out /tmp
+
+# Clean out /tmp and /var/tmp
 find /tmp -mindepth 1 -delete
 find /var/tmp -mindepth 1 -delete
+
+# Remove persistent  rules
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+rm -f /etc/udev/rules.d/70-persistent-*.rules
+
+# Unregister the system
 subscription-manager remove --all
 subscription-manager unregister
 subscription-manager clean
+
+# Remove hostname
+truncate -s 0 /etc/hostname
+
+# Clean machine-id
+truncate -s 0 /etc/machine-id
+
+# Zero out files
+dd if=/dev/zero of=/EMPTY bs=1M
+rm -f /EMPTY
+sync
